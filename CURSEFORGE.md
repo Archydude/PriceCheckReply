@@ -41,7 +41,7 @@ They type `?pc` with an item link and get this back:
 - **Battle pets** work too.
 
 ### Honest answers
-- **Items that can't be auctioned** say so instead of getting a price: `binds when picked up, can't be auctioned, sells to a vendor for 5s`. Quest items and warbound items too.
+- **Items that can't be auctioned** say so instead of getting a price: `binds when picked up, can't be auctioned, sells to a vendor for 5s`. Quest items and account-bound items too.
 - **No price yet?** The answer says there's no auction data, plus what a vendor pays.
 - **How fresh is it?** Auctionator prices say when they were updated: `updated 2h ago`.
 
@@ -54,11 +54,10 @@ When several guild mates have PriceCheck Reply, a request still gets **just one 
 ### Polite by design
 - It never answers your own messages or Game Masters.
 - The same answer isn't repeated within a few seconds, and a flood of requests won't get you muted for spam.
-- Inside dungeons, raids and battlegrounds the game doesn't let addons read chat, so it stays quiet there.
 
 ### Good to know
 - Needs **TradeSkillMaster** or **Auctionator** with prices for your realm.
-- Works on Retail, Mists of Pandaria Classic, TBC Anniversary, WoW Forever and Classic Era.
+- Made for **WoW Forever**.
 - **/pricereply** opens the options. **/pricereply test [item]** shows the answer you'd send, only to you.
 
 **Feedback and bug reports are welcome** in the comments.
@@ -78,7 +77,7 @@ PriceCheck Reply 1.0.0
 
 **Release type:** `Release`
 
-**Game versions:** Retail `12.1.0` and `12.1.5`, Mists of Pandaria Classic `5.5.4`, TBC Anniversary `2.5.5` and `2.5.6`, WoW Forever `1.60.1`, Classic Era `1.15.9` (covers Season of Discovery).
+**Game versions:** WoW Forever `1.60.1`.
 
 **Changelog** (paste only the newest part; paste older parts too if they never went up)
 ```markdown

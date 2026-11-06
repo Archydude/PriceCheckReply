@@ -75,7 +75,8 @@ function ns.CreateOptions()
 	channel("guildReply", "Guild chat", "guild chat", "Whether to answer requests made in guild chat, and how.")
 	channel("officerReply", "Officer chat", "officer chat", "Whether to answer requests made in officer chat, and how.")
 	channel("groupReply", "Party and raid chat", "the same chat",
-		"Whether to answer requests made in party, raid and instance chat, and how. Inside dungeons, raids and battlegrounds the game doesn't let addons read chat, so no answers there.")
+		"Whether to answer requests made in party, raid and instance chat, and how."
+			.. (issecretvalue and " Inside dungeons, raids and battlegrounds the game doesn't let addons read chat, so no answers there." or ""))
 
 	header("Prices")
 	dropdown("provider", "Price addon", {

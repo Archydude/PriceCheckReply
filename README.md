@@ -7,7 +7,7 @@ Friend whispers: ?pc [Linen Cloth]
 To Friend: [Linen Cloth]: 25s 30c (TSM market value)
 ```
 
-Works on Retail, MoP Classic, TBC Anniversary, WoW Forever and Classic Era.
+Made for WoW Forever.
 
 ## Requirements
 
@@ -25,7 +25,7 @@ Works on Retail, MoP Classic, TBC Anniversary, WoW Forever and Classic Era.
 
 Items with no auction price get `no auction data` back, plus what a vendor pays for them when the game knows (you can turn that off).
 
-Items that can't go on the auction house say so instead of getting a price: `[Bound Sword]: binds when picked up, can't be auctioned, sells to a vendor for 5s`. That covers items that bind when picked up, quest items and items bound to your account or warband (including warbound until equipped). An item the game hasn't seen yet can take a moment to answer.
+Items that can't go on the auction house say so instead of getting a price: `[Bound Sword]: binds when picked up, can't be auctioned, sells to a vendor for 5s`. That covers items that bind when picked up, quest items and items bound to your account. An item the game hasn't seen yet can take a moment to answer.
 
 ## Who gets answered
 
@@ -48,7 +48,7 @@ For requests in a chat channel, you choose for each one: **Don't answer** (the d
 
 **When several of you have PriceCheck Reply**, a request in guild, officer, party or raid chat still gets just one answer, about a second later, instead of one from everyone. Who answers changes from request to request. Someone who has that chat set to Don't answer is left out, so one of the others answers. Whispers are answered right away, since only you got them.
 
-Inside dungeons, raids, Mythic+ and battlegrounds the game doesn't let addons read chat or send it during fights, so nothing gets answered there.
+Where the game hides chat from addons, such as during some fights, nothing gets answered there.
 
 To keep chat tidy, the same answer isn't sent to the same place twice within a few seconds, and a sudden flood of requests only gets some answers, so you don't get muted for spam. It never answers your own messages or Game Masters.
 
