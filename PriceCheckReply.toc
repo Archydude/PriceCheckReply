@@ -8,6 +8,7 @@
 ## IconTexture: Interface\Icons\INV_Misc_Coin_02
 ## Category-enUS: Chat
 ## X-License: MIT
+## X-Curse-Project-ID: 1787358
 
 Core.lua
 Prices.lua
