@@ -29,20 +29,19 @@ Friends and guild mates type ?pc or ? with an item link and get your TSM or Auct
 ```markdown
 ## Price checks, answered for you
 
-A guild mate wants to know what something sells for. PriceCheck Reply answers them with your **TSM or Auctionator** price, so you don't have to stop what you're doing to look it up.
+When a guild mate asks what something sells for, PriceCheck Reply answers with your **TSM or Auctionator** price, so you don't have to look it up.
 
 They type `?pc` with an item link, or just `?` the old-school way, and get this back:
 `[Linen Cloth]: 25s 30c (TSM market value)`
 
 ### Ask any way you like
-- **Old-school style:** `?[Linen Cloth]` works too. A question mark in normal chat, like `anyone have [Linen Cloth]?`, doesn't count.
+- **Old-school style:** `?[Linen Cloth]` works too; `anyone have [Linen Cloth]?` doesn't count.
 - **Stacks:** `?pc 20 [Linen Cloth]` answers with the price of 20 and of one.
-- **Several items** in one message.
-- **Their choice of price:** `?pc tsm [item]` or `?pc auc [item]` picks the price addon. If you only have one of them, the answer says so.
-- **Battle pets** work too.
+- **Several items** in one message, battle pets included.
+- **Their choice of price:** `?pc tsm [item]` or `?pc auc [item]` picks the price addon.
 
 ### Honest answers
-- **Items that can't be auctioned** say so instead of getting a price: `binds when picked up, can't be auctioned, sells to a vendor for 5s`. Quest items and account-bound items too.
+- **Items that can't be auctioned** say so instead of getting a price: `binds when picked up, can't be auctioned, sells to a vendor for 5s`. Quest items and account-bound or warbound items too.
 - **No price yet?** The answer says there's no auction data, plus what a vendor pays.
 - **How fresh is it?** Auctionator prices say when they were updated: `updated 2h ago`.
 
@@ -55,10 +54,11 @@ When several guild mates have PriceCheck Reply, a request still gets **just one 
 ### Polite by design
 - It never answers your own messages or Game Masters.
 - The same answer isn't repeated within a few seconds, and a flood of requests won't get you muted for spam.
+- On Retail, inside dungeons, raids and battlegrounds the game doesn't let addons read chat, so it stays quiet there.
 
 ### Good to know
 - Needs **TradeSkillMaster** or **Auctionator** with prices for your realm.
-- Made for **WoW Forever**.
+- Works on Retail, Mists of Pandaria Classic, TBC Anniversary, WoW Forever and Classic Era.
 - **/pricereply** opens the options. **/pricereply test [item]** shows the answer you'd send, only to you.
 
 **Feedback and bug reports are welcome** in the comments.
@@ -78,7 +78,7 @@ PriceCheck Reply 1.1.0
 
 **Release type:** `Release`
 
-**Game versions:** WoW Forever `1.60.1`.
+**Game versions:** Retail `12.1.0` and `12.1.5`, Mists of Pandaria Classic `5.5.4`, TBC Anniversary `2.5.5` and `2.5.6`, WoW Forever `1.60.1`, Classic Era `1.15.9` (covers Season of Discovery).
 
 **Changelog** (paste only the newest part; paste older parts too if they never went up)
 ```markdown
