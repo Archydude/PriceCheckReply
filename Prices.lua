@@ -230,16 +230,19 @@ end
 ---------------------------------------------------------------------------
 
 -- The links in a message, each with how many were asked about: "20 [Linen Cloth]",
--- "20x [Linen Cloth]" and "[Linen Cloth] x20" all ask about 20. At most MAX_ITEMS.
+-- "20x [Linen Cloth]", "x20 [Linen Cloth]", "20 ?[Linen Cloth]" and "[Linen Cloth] x20" all ask
+-- about 20, and so does "[Linen Cloth] 20" when the number ends the message (in the middle it
+-- could belong to the next link). At most MAX_ITEMS.
 function ns.ReadItems(text)
 	local items = {}
 	local searchFrom, lastEnd = 1, 0
 	while #items < MAX_ITEMS do
 		local first, last, kind = text:find(ns.LINK_PATTERN, searchFrom)
 		if not first then break end
-		local count = text:sub(lastEnd + 1, first - 1):match("(%d+)%s*[xX]?%s*$")
+		local count = text:sub(lastEnd + 1, first - 1):match("(%d+)%s*[xX]?%s*%??%s*$")
 		local link = text:sub(first, last)
 		local afterCount, afterEnd = text:match("^%s*[xX]%s*(%d+)()", last + 1)
+		if not afterCount then afterCount, afterEnd = text:match("^%s*(%d+)%s*()$", last + 1) end
 		if afterCount then
 			count = afterCount
 			last = afterEnd - 1

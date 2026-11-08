@@ -16,7 +16,7 @@ Made for WoW Forever.
 ## Asking
 
 - **One item:** `?pc [Linen Cloth]`, or the old-school way, `?[Linen Cloth]`
-- **A stack:** `?pc 20 [Linen Cloth]`, `?pc 20x [Linen Cloth]` or `?pc [Linen Cloth] x20`. The answer gives the price of 20 and of one: `20x [Linen Cloth]: 5g 6s (25s 30c each, TSM market value)`
+- **A stack:** `?pc 20 [Linen Cloth]`, `?pc 20x [Linen Cloth]`, `?pc [Linen Cloth] x20` or `?pc [Linen Cloth] 20`, and the same with `?`: `?20 [Linen Cloth]`, `?x20 [Linen Cloth]`, `20 ?[Linen Cloth]`, `?[Linen Cloth] x20`. A number after the link without an x only counts at the end of the message. The answer gives the price of 20 and of one: `20x [Linen Cloth]: 5g 6s (25s 30c each, TSM market value)`
 - **Several items:** `?pc [Linen Cloth] [Wool Cloth]`, up to 6 at once. Answers are put together into as few lines as fit.
 - **Battle pets:** pet links work too.
 - **A price addon of their choice:** `?pc tsm [Linen Cloth]` or `?pc auc [Linen Cloth]` (or `auctionator`) answers with that addon's price, and the answer always says which addon it's from. If you don't have the addon they asked for, the answer comes from the one you have and says so: `(Auctionator, no TSM here)`. You can turn this off.

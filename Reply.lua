@@ -84,7 +84,7 @@ end
 ---------------------------------------------------------------------------
 
 -- Whether a "?" starts a word and is followed by an item link, maybe with a count in between:
--- "?[Linen Cloth]", "? 20 [Linen Cloth]". "what drops this? [item]" doesn't count, since the "?"
+-- "?[Linen Cloth]", "? 20 [Linen Cloth]", "?x20 [Linen Cloth]". "what drops this? [item]" doesn't count, since the "?"
 -- ends a word there.
 local function hasShortTrigger(text)
 	local from = 1
@@ -93,7 +93,7 @@ local function hasShortTrigger(text)
 		if not at then return false end
 		if at == 1 or text:sub(at - 1, at - 1):find("%s") then
 			local rest = text:sub(at + 1)
-			if rest:find("^%s*|c") or rest:find("^%s*%d+%s*[xX]?%s*|c") then return true end
+			if rest:find("^%s*|c") or rest:find("^%s*[xX]?%s*%d+%s*[xX]?%s*|c") then return true end
 		end
 		from = at + 1
 	end
