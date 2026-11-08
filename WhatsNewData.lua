@@ -2,10 +2,13 @@
 ArchdudeWhatsNew:Register("PriceCheckReply", {
 	title = "PriceCheck Reply",
 	icon = "Interface\\Icons\\INV_Misc_Coin_02",
-	version = "1.1.0",
+	version = "1.1.1",
 	seen = "PriceCheckReplyWhatsNew",
 	saved = { "PriceCheckReplyDB" },
 	changes = {
+		{ "1.1.1",
+			"Works on every version of WoW again: Retail, Mists of Pandaria Classic, TBC Anniversary, WoW Forever and Classic Era.",
+		},
 		{ "1.1.0",
 			"The old-school way of asking works too: |cffffd100?[Linen Cloth]|r, a question mark right before the item link. Everyone with the addon answers it, and a question mark in normal chat, like |cffffd100anyone have [Linen Cloth]?|r, doesn't count.",
 			"More ways to ask about a stack: |cffffd100?x20 [Linen Cloth]|r, |cffffd10020 ?[Linen Cloth]|r, and a plain number at the end of the message, like |cffffd100?pc [Linen Cloth] 20|r.",

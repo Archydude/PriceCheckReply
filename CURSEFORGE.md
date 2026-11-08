@@ -69,11 +69,11 @@ When several guild mates have PriceCheck Reply, a request still gets **just one 
 
 ## B. Upload File form
 
-**File:** `dist\PriceCheckReply-1.1.0.zip`
+**File:** `dist\PriceCheckReply-1.1.1.zip`
 
 **Display name**
 ```
-PriceCheck Reply 1.1.0
+PriceCheck Reply 1.1.1
 ```
 
 **Release type:** `Release`
@@ -82,6 +82,9 @@ PriceCheck Reply 1.1.0
 
 **Changelog** (paste only the newest part; paste older parts too if they never went up)
 ```markdown
+1.1.1
+- Works on every version of WoW again: Retail, Mists of Pandaria Classic, TBC Anniversary, WoW Forever and Classic Era.
+
 1.1.0
 - The old-school way of asking works too: `?[Linen Cloth]`, a question mark right before the item link. Everyone with the addon answers it, and a question mark in normal chat, like `anyone have [Linen Cloth]?`, doesn't count.
 - More ways to ask about a stack: `?x20 [Linen Cloth]`, `20 ?[Linen Cloth]`, and a plain number at the end of the message, like `?pc [Linen Cloth] 20`.
