@@ -13,7 +13,7 @@ PriceCheck Reply
 
 **Summary**
 ```
-Friends and guild mates type ?pc with an item link and get your TSM or Auctionator price back. One answer per request, even when the whole guild has it.
+Friends and guild mates type ?pc or ? with an item link and get your TSM or Auctionator price back. One answer per request, even when the whole guild has it.
 ```
 
 **Main category:** `Auction & Economy`
@@ -31,10 +31,11 @@ Friends and guild mates type ?pc with an item link and get your TSM or Auctionat
 
 A guild mate wants to know what something sells for. PriceCheck Reply answers them with your **TSM or Auctionator** price, so you don't have to stop what you're doing to look it up.
 
-They type `?pc` with an item link and get this back:
+They type `?pc` with an item link, or just `?` the old-school way, and get this back:
 `[Linen Cloth]: 25s 30c (TSM market value)`
 
 ### Ask any way you like
+- **Old-school style:** `?[Linen Cloth]` works too. A question mark in normal chat, like `anyone have [Linen Cloth]?`, doesn't count.
 - **Stacks:** `?pc 20 [Linen Cloth]` answers with the price of 20 and of one.
 - **Several items** in one message.
 - **Their choice of price:** `?pc tsm [item]` or `?pc auc [item]` picks the price addon. If you only have one of them, the answer says so.

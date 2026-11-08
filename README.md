@@ -1,6 +1,6 @@
 # PriceCheck Reply
 
-Answers price questions for you. When a friend or guild mate whispers you `?pc` with an item link, PriceCheck Reply whispers back what the item goes for, using your TSM or Auctionator prices. You don't have to stop what you're doing to look it up.
+Answers price questions for you. When a friend or guild mate whispers you `?pc` or `?` with an item link, PriceCheck Reply whispers back what the item goes for, using your TSM or Auctionator prices. You don't have to stop what you're doing to look it up.
 
 ```
 Friend whispers: ?pc [Linen Cloth]
@@ -15,13 +15,13 @@ Made for WoW Forever.
 
 ## Asking
 
-- **One item:** `?pc [Linen Cloth]`
+- **One item:** `?pc [Linen Cloth]`, or the old-school way, `?[Linen Cloth]`
 - **A stack:** `?pc 20 [Linen Cloth]`, `?pc 20x [Linen Cloth]` or `?pc [Linen Cloth] x20`. The answer gives the price of 20 and of one: `20x [Linen Cloth]: 5g 6s (25s 30c each, TSM market value)`
 - **Several items:** `?pc [Linen Cloth] [Wool Cloth]`, up to 6 at once. Answers are put together into as few lines as fit.
 - **Battle pets:** pet links work too.
 - **A price addon of their choice:** `?pc tsm [Linen Cloth]` or `?pc auc [Linen Cloth]` (or `auctionator`) answers with that addon's price, and the answer always says which addon it's from. If you don't have the addon they asked for, the answer comes from the one you have and says so: `(Auctionator, no TSM here)`. You can turn this off.
 
-`?pc` can be anywhere in the message, in upper or lower case, but it has to stand on its own (`?pcs` doesn't count), and item names don't count. It can't be changed, so everyone asks the same way.
+`?pc` can be anywhere in the message, in upper or lower case, but it has to stand on its own (`?pcs` doesn't count), and item names don't count. A plain `?` works when it's right before the item link, with only a number in between if any: `?[Linen Cloth]` and `?20 [Linen Cloth]` ask, but `anyone have [Linen Cloth]?` and `what drops this? [Linen Cloth]` don't. Both ways always work and can't be changed, so everyone asks the same way.
 
 Items with no auction price get `no auction data` back, plus what a vendor pays for them when the game knows (you can turn that off).
 

@@ -52,7 +52,7 @@ function ns.CreateOptions()
 	end
 
 	checkbox("enabled", "Answer price requests",
-		"Answer messages with ?pc and one or more item links, like \"?pc [Linen Cloth]\". A number before an item asks about that many: \"?pc 20 [Linen Cloth]\". "
+		"Answer messages with ?pc and one or more item links, like \"?pc [Linen Cloth]\", or with ? right before a link, like \"?[Linen Cloth]\". A number before an item asks about that many: \"?pc 20 [Linen Cloth]\". "
 			.. "Same as /pricereply on and /pricereply off.")
 
 	header("Whispers")

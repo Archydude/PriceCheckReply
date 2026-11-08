@@ -1,6 +1,6 @@
 ## Interface: 16001
 ## Title: PriceCheck Reply
-## Notes: Answers friends and guild mates who ask "?pc" with an item link, with its price from TSM or Auctionator. Type /pricereply.
+## Notes: Answers friends and guild mates who ask "?pc" or "?" with an item link, with its price from TSM or Auctionator. Type /pricereply.
 ## Author: Archdude
 ## Version: 1.0.0
 ## OptionalDeps: TradeSkillMaster, Auctionator

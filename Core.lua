@@ -53,8 +53,8 @@ end
 -- Saved settings
 ---------------------------------------------------------------------------
 
--- What a message has to contain, besides an item link, to get an answer. Fixed, so everyone asks
--- the same way.
+-- What a message has to contain, besides an item link, to get an answer. A "?" right before a link
+-- works too (see Reply.lua). Both are fixed, so everyone asks the same way.
 ns.TRIGGER = "?pc"
 
 ns.DEFAULTS = {
