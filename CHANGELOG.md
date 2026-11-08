@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.0
+- The old-school way of asking works too: `?[Linen Cloth]`, a question mark right before the item link. Everyone with the addon answers it, and a question mark in normal chat, like `anyone have [Linen Cloth]?`, doesn't count.
+- More ways to ask about a stack: `?x20 [Linen Cloth]`, `20 ?[Linen Cloth]`, and a plain number at the end of the message, like `?pc [Linen Cloth] 20`.
+
 ## 1.0.0
 - First release: when a friend or guild mate whispers you `?pc` with an item link, they get the item's price back from TSM or Auctionator, like `[Linen Cloth]: 25s 30c (TSM market value)`.
 - Ask about several items at once, or about a stack: `?pc 20 [Linen Cloth]` answers with the price of 20 and the price of one.

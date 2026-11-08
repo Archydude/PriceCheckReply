@@ -2,10 +2,14 @@
 ArchdudeWhatsNew:Register("PriceCheckReply", {
 	title = "PriceCheck Reply",
 	icon = "Interface\\Icons\\INV_Misc_Coin_02",
-	version = "1.0.0",
+	version = "1.1.0",
 	seen = "PriceCheckReplyWhatsNew",
 	saved = { "PriceCheckReplyDB" },
 	changes = {
+		{ "1.1.0",
+			"The old-school way of asking works too: |cffffd100?[Linen Cloth]|r, a question mark right before the item link. Everyone with the addon answers it, and a question mark in normal chat, like |cffffd100anyone have [Linen Cloth]?|r, doesn't count.",
+			"More ways to ask about a stack: |cffffd100?x20 [Linen Cloth]|r, |cffffd10020 ?[Linen Cloth]|r, and a plain number at the end of the message, like |cffffd100?pc [Linen Cloth] 20|r.",
+		},
 		{ "1.0.0",
 			"First release: when a friend or guild mate whispers you |cffffd100?pc|r with an item link, they get the item's price back from TSM or Auctionator, like |cffffd100[Linen Cloth]: 25s 30c (TSM market value)|r.",
 			"Ask about several items at once, or about a stack: |cffffd100?pc 20 [Linen Cloth]|r answers with the price of 20 and the price of one.",
