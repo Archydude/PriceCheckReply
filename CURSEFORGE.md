@@ -31,30 +31,30 @@ Friends and guild mates type ?pc or ? with an item link and get your TSM or Auct
 
 When a guild mate asks what something sells for, PriceCheck Reply answers with your **TSM or Auctionator** price, so you don't have to look it up.
 
-They type `?pc` with an item link, or just `?` the old-school way, and get this back:
+They type `?pc` with an item link and get this back:
 `[Linen Cloth]: 25s 30c (TSM market value)`
 
 ### Ask any way you like
 - **Old-school style:** `?[Linen Cloth]` works too; `anyone have [Linen Cloth]?` doesn't count.
-- **Stacks:** `?pc 20 [Linen Cloth]` answers with the price of 20 and of one.
+- **Stacks:** `?pc 20 [Linen Cloth]` prices 20 and one.
 - **Several items** in one message, battle pets included.
 - **Their choice of price:** `?pc tsm [item]` or `?pc auc [item]` picks the price addon.
 
 ### Honest answers
-- **Items that can't be auctioned** say so instead of getting a price: `binds when picked up, can't be auctioned, sells to a vendor for 5s`. Quest items and account-bound or warbound items too.
-- **No price yet?** The answer says there's no auction data, plus what a vendor pays.
+- **Items that can't be auctioned** say so: `binds when picked up, can't be auctioned, sells to a vendor for 5s`. Quest items and account-bound or warbound items too.
+- **No price yet?** It says so, plus what a vendor pays.
 - **How fresh is it?** Auctionator prices say when they were updated: `updated 2h ago`.
 
 ### You choose who gets answered
-Whispers from friends, Battle.net friends and guild mates are answered from the start. Turn on strangers, or guild, officer, party and raid chat. For each chat, answer right there so everyone sees the price, or whisper the asker. Realms that don't let addons write in chat, like WoW Forever's for now, get whispered answers instead.
+Whispers from friends, Battle.net friends and guild mates are answered from the start. Turn on strangers, or guild, officer, party and raid chat, answered right there or by whisper. Realms that don't let addons write in chat, like WoW Forever's for now, get whispered answers.
 
 ### One answer, even in a big guild
-When several guild mates have PriceCheck Reply, a request still gets **just one answer**, and who answers changes from request to request. No flooded guild chat. (On realms that don't let addons write in chat, each of you whispers the asker.)
+When several guild mates have PriceCheck Reply, a request still gets **just one answer**, from a different player each time. (Where the realm doesn't let addons write in chat, each of you whispers the asker.)
 
 ### Polite by design
 - It never answers your own messages or Game Masters.
-- The same answer isn't repeated within a few seconds, and a flood of requests won't get you muted for spam.
-- On Retail, inside dungeons, raids and battlegrounds the game doesn't let addons read chat, so it stays quiet there.
+- No repeats within a few seconds, and a flood of requests won't get you muted for spam.
+- On Retail it stays quiet in dungeons, raids and battlegrounds, where the game hides chat from addons.
 
 ### Good to know
 - Needs **TradeSkillMaster** or **Auctionator** with prices for your realm.
@@ -69,11 +69,11 @@ When several guild mates have PriceCheck Reply, a request still gets **just one 
 
 ## B. Upload File form
 
-**File:** `dist\PriceCheckReply-1.1.1.zip`
+**File:** `dist\PriceCheckReply-1.1.2.zip`
 
 **Display name**
 ```
-PriceCheck Reply 1.1.1
+PriceCheck Reply 1.1.2
 ```
 
 **Release type:** `Release`
@@ -82,6 +82,9 @@ PriceCheck Reply 1.1.1
 
 **Changelog** (paste only the newest part; paste older parts too if they never went up)
 ```markdown
+1.1.2
+- Fixed: on WoW Forever, guild, officer, party and raid requests caused an "action blocked" error and got no answer. Forever's realms don't let addons write in chat, so on realms like that those requests are now answered by whisper. Each player there with the addon whispers the asker, since the addons can't agree on one answerer. Where the realm allows addon chat, nothing changes.
+
 1.1.1
 - Works on every version of WoW again: Retail, Mists of Pandaria Classic, TBC Anniversary, WoW Forever and Classic Era.
 

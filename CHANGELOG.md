@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.1.2
+- Fixed: on WoW Forever, guild, officer, party and raid requests caused an "action blocked" error and got no answer. Forever's realms don't let addons write in chat, so on realms like that those requests are now answered by whisper. Each player there with the addon whispers the asker, since the addons can't agree on one answerer. Where the realm allows addon chat, nothing changes.
+
 ## 1.1.1
 - Works on every version of WoW again: Retail, Mists of Pandaria Classic, TBC Anniversary, WoW Forever and Classic Era.
 
