@@ -40,7 +40,7 @@ Whispers are always answered with a whisper:
 
 For requests in a chat channel, you choose for each one: **Don't answer** (the default), **Answer in the same chat** so everyone there sees the price, or **Whisper the asker** to keep it between the two of you.
 
-On Retail and WoW Forever the game doesn't let addons write in guild, officer, party or raid chat, so there those requests are always answered by whisper, and the choice is Don't answer or Whisper the asker.
+Some realms don't let addons write in chat. WoW Forever's realms are like that right now. There, guild, officer, party and raid requests are always answered by whisper, and since the players with the addon can't tell each other who answers, the asker gets a whisper from each of them. If the realm allows it again, answers go back to how you set them.
 
 | Option | Covers |
 |---|---|

@@ -69,6 +69,9 @@ end
 function ns.TakeTurns(chatType, text, answer)
 	local channel = ADDON_CHANNEL[chatType]
 	if not channel then return answer() end
+	-- Where the realm doesn't let addons send messages, no one can hear the others, so everyone
+	-- answers (by whisper; see ns.OutgoingChatAllowed).
+	if not ns.OutgoingChatAllowed() then return answer() end
 
 	-- Written as a whole number, so every game writes the same key.
 	local key = chatType .. ":" .. string.format("%.0f", hash(text))

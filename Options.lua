@@ -65,15 +65,13 @@ function ns.CreateOptions()
 
 	header("Channels")
 	local function channel(key, name, chat, tooltip)
-		local choices = { { "off", "Don't answer" } }
-		if ns.CAN_ANSWER_IN_CHANNEL then
-			choices[#choices + 1] = { "channel", "Answer in " .. chat }
-			tooltip = tooltip .. " Answering in " .. chat .. " lets everyone there see the price; a whisper keeps it between you and the asker."
-		else
-			tooltip = tooltip .. " This version of the game doesn't let addons write in " .. chat .. ", so the answer is whispered to the asker."
-		end
-		choices[#choices + 1] = { "whisper", "Whisper the asker" }
-		dropdown(key, name, choices, tooltip .. " When others there have PriceCheck Reply too, only one of you answers each request.")
+		dropdown(key, name, {
+			{ "off", "Don't answer" },
+			{ "channel", "Answer in " .. chat },
+			{ "whisper", "Whisper the asker" },
+		}, tooltip .. " Answering in " .. chat .. " lets everyone there see the price; a whisper keeps it between you and the asker."
+			.. " When others there have PriceCheck Reply too, only one of you answers each request."
+			.. " Some realms, such as WoW Forever's, don't let addons write in chat; there the asker always gets a whisper, one from each player with the addon.")
 	end
 	channel("guildReply", "Guild chat", "guild chat", "Whether to answer requests made in guild chat, and how.")
 	channel("officerReply", "Officer chat", "officer chat", "Whether to answer requests made in officer chat, and how.")

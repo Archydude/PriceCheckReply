@@ -57,10 +57,16 @@ end
 -- works too (see Reply.lua). Both are fixed, so everyone asks the same way.
 ns.TRIGGER = "?pc"
 
--- Whether answers can go into guild, officer, party and raid chat. The game engine with secret
--- values (Retail and WoW Forever) blocks addons from writing there, even in direct reply to a
--- message (seen on Forever 1.60.1); whispers still work. There, those requests get a whisper.
-ns.CAN_ANSWER_IN_CHANNEL = not issecretvalue
+-- Whether this realm lets addons send outgoing chat: answers into guild, officer, party and raid
+-- chat, and the hidden messages players use to agree who answers. Blizzard sets this per realm;
+-- WoW Forever realms restrict it (seen on 1.60.1, November 2026), and then the game blocks those
+-- sends. Whispers still go through, so restricted requests get a whisper instead.
+function ns.OutgoingChatAllowed()
+	local restricted = C_ChatInfo and C_ChatInfo.AreOutgoingAddonChatMessagesRestricted
+	if not restricted then return true end
+	local ok, isRestricted = pcall(restricted)
+	return not (ok and isRestricted)
+end
 
 ns.DEFAULTS = {
 	enabled = true,
@@ -98,12 +104,6 @@ events:SetScript("OnEvent", function(self, _, name)
 	-- Settings that no longer exist (the channel checkboxes before they became choices, the trigger).
 	for key in pairs(PriceCheckReplyDB) do
 		if ns.DEFAULTS[key] == nil then PriceCheckReplyDB[key] = nil end
-	end
-	-- "Answer in the same chat" chosen where the game doesn't allow it becomes a whisper.
-	if not ns.CAN_ANSWER_IN_CHANNEL then
-		for _, key in ipairs({ "guildReply", "officerReply", "groupReply" }) do
-			if PriceCheckReplyDB[key] == "channel" then PriceCheckReplyDB[key] = "whisper" end
-		end
 	end
 	ns.db = PriceCheckReplyDB
 	ns.CreateOptions()
