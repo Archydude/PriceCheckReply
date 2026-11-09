@@ -69,11 +69,11 @@ When several guild mates have PriceCheck Reply, a request still gets **just one 
 
 ## B. Upload File form
 
-**File:** `dist\PriceCheckReply-1.1.2.zip`
+**File:** `dist\PriceCheckReply-1.1.3.zip`
 
 **Display name**
 ```
-PriceCheck Reply 1.1.2
+PriceCheck Reply 1.1.3
 ```
 
 **Release type:** `Release`
@@ -82,6 +82,10 @@ PriceCheck Reply 1.1.2
 
 **Changelog** (paste only the newest part; paste older parts too if they never went up)
 ```markdown
+1.1.3
+- Party and raid requests on WoW Forever are answered in party and raid chat again. Only guild and officer requests are whispered there, since those are the chats Forever's realms close to addons.
+- Fixed: on WoW Forever, when several of you in a party had the addon, a request could get two answers or none. Now it gets one.
+
 1.1.2
 - Fixed: on WoW Forever, guild, officer, party and raid requests caused an "action blocked" error and got no answer. Forever's realms don't let addons write in chat, so on realms like that those requests are now answered by whisper. Each player there with the addon whispers the asker, since the addons can't agree on one answerer. Where the realm allows addon chat, nothing changes.
 
