@@ -57,11 +57,16 @@ end
 -- works too (see Reply.lua). Both are fixed, so everyone asks the same way.
 ns.TRIGGER = "?pc"
 
--- Whether this realm lets addons send outgoing chat: answers into guild, officer, party and raid
--- chat, and the hidden messages players use to agree who answers. Blizzard sets this per realm;
--- WoW Forever realms restrict it (seen on 1.60.1, November 2026), and then the game blocks those
--- sends. Whispers still go through, so restricted requests get a whisper instead.
-function ns.OutgoingChatAllowed()
+-- Chats an addon can't write in when the realm restricts outgoing addon chat. Blizzard sets the
+-- restriction per realm; WoW Forever realms have it (seen on 1.60.1, November 2026), and there the
+-- game blocks addons from guild chat (and officer chat, which goes to the same place) but lets
+-- party chat and whispers through.
+local RESTRICTED_CHATS = { GUILD = true, OFFICER = true }
+
+-- Whether an answer can go into `chatType` chat on this realm. Where it can't, the asker gets a
+-- whisper instead.
+function ns.CanAnswerIn(chatType)
+	if not RESTRICTED_CHATS[chatType] then return true end
 	local restricted = C_ChatInfo and C_ChatInfo.AreOutgoingAddonChatMessagesRestricted
 	if not restricted then return true end
 	local ok, isRestricted = pcall(restricted)

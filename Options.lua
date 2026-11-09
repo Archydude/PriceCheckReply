@@ -70,11 +70,13 @@ function ns.CreateOptions()
 			{ "channel", "Answer in " .. chat },
 			{ "whisper", "Whisper the asker" },
 		}, tooltip .. " Answering in " .. chat .. " lets everyone there see the price; a whisper keeps it between you and the asker."
-			.. " When others there have PriceCheck Reply too, only one of you answers each request."
-			.. " Some realms, such as WoW Forever's, don't let addons write in chat; there the asker always gets a whisper, one from each player with the addon.")
+			.. " When others there have PriceCheck Reply too, only one of you answers each request.")
 	end
-	channel("guildReply", "Guild chat", "guild chat", "Whether to answer requests made in guild chat, and how.")
-	channel("officerReply", "Officer chat", "officer chat", "Whether to answer requests made in officer chat, and how.")
+	-- Guild and officer chat are the ones some realms close to addons (see ns.CanAnswerIn).
+	local guildNote = " Some realms, such as WoW Forever's, don't let addons write in guild or officer chat;"
+		.. " there the asker always gets a whisper, one from each player with the addon."
+	channel("guildReply", "Guild chat", "guild chat", "Whether to answer requests made in guild chat, and how." .. guildNote)
+	channel("officerReply", "Officer chat", "officer chat", "Whether to answer requests made in officer chat, and how." .. guildNote)
 	channel("groupReply", "Party and raid chat", "the same chat",
 		"Whether to answer requests made in party, raid and instance chat, and how."
 			.. (issecretvalue and " Inside dungeons, raids and battlegrounds the game doesn't let addons read chat, so no answers there." or ""))

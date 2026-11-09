@@ -46,10 +46,10 @@ They type `?pc` with an item link and get this back:
 - **How fresh is it?** Auctionator prices say when they were updated: `updated 2h ago`.
 
 ### You choose who gets answered
-Whispers from friends, Battle.net friends and guild mates are answered from the start. Turn on strangers, or guild, officer, party and raid chat, answered right there or by whisper. Realms that don't let addons write in chat, like WoW Forever's for now, get whispered answers.
+Whispers from friends, Battle.net friends and guild mates are answered from the start. Turn on strangers, or guild, officer, party and raid chat, answered right there or by whisper. Realms that don't let addons write in guild chat, like WoW Forever's for now, get whispered answers there.
 
 ### One answer, even in a big guild
-When several guild mates have PriceCheck Reply, a request still gets **just one answer**, from a different player each time. (Where the realm doesn't let addons write in chat, each of you whispers the asker.)
+When several guild mates have PriceCheck Reply, a request still gets **just one answer**, from a different player each time. (Where the realm closes guild chat to addons, each of you whispers the asker.)
 
 ### Polite by design
 - It never answers your own messages or Game Masters.

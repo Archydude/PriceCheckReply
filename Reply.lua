@@ -176,7 +176,7 @@ local function onChat(event, ...)
 		if event == "CHAT_MSG_WHISPER" then
 			if not wantsWhisperFrom(sender, guid) then return end
 			target = sender
-		elseif how == "whisper" or not ns.OutgoingChatAllowed() then
+		elseif how == "whisper" or not ns.CanAnswerIn(channel.reply) then
 			replyType, target = "WHISPER", sender
 		end
 	end

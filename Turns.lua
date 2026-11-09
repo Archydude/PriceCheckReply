@@ -69,9 +69,9 @@ end
 function ns.TakeTurns(chatType, text, answer)
 	local channel = ADDON_CHANNEL[chatType]
 	if not channel then return answer() end
-	-- Where the realm doesn't let addons send messages, no one can hear the others, so everyone
-	-- answers (by whisper; see ns.OutgoingChatAllowed).
-	if not ns.OutgoingChatAllowed() then return answer() end
+	-- Where the realm doesn't let addons write in this chat, it doesn't let the hidden messages
+	-- through either, so everyone answers (by whisper; see ns.CanAnswerIn).
+	if not ns.CanAnswerIn(chatType) then return answer() end
 
 	-- Written as a whole number, so every game writes the same key.
 	local key = chatType .. ":" .. string.format("%.0f", hash(text))
@@ -80,9 +80,14 @@ function ns.TakeTurns(chatType, text, answer)
 	local mine = me()
 	offers[key] = offers[key] or {}
 	offers[key][mine] = now
+	-- Newer games return 0 for a message that went out, older ones true or nothing.
+	local sent = false
 	if C_ChatInfo and C_ChatInfo.SendAddonMessage then
-		pcall(C_ChatInfo.SendAddonMessage, PREFIX, key, channel)
+		local ok, result = pcall(C_ChatInfo.SendAddonMessage, PREFIX, key, channel)
+		sent = ok and (result == nil or result == true or result == 0)
 	end
+	-- If the others can't hear this player, there's nothing to agree on: answer right away.
+	if not sent then return answer() end
 
 	C_Timer.After(WINDOW, function()
 		local names = {}
