@@ -15,7 +15,7 @@ local ADDON_CHANNEL = {
 	GUILD = "GUILD", OFFICER = "OFFICER", PARTY = "PARTY", RAID = "RAID", INSTANCE_CHAT = "INSTANCE_CHAT",
 }
 
-local offers = {} -- request key -> { [player name] = time their offer arrived }
+local offers = {} -- request key -> { [player GUID] = time their offer arrived }
 
 -- A number for a piece of text, the same on every player's game.
 local function hash(text)
@@ -24,43 +24,32 @@ local function hash(text)
 	return h
 end
 
--- "name-realm" in lower case, the way other players' games see a name. The realm isn't known for
--- a moment after login, so the player's own name isn't kept until it is.
-local myName
-local function fullName(name)
-	if not name:find("-", 1, true) then
-		local realm = GetNormalizedRealmName and GetNormalizedRealmName()
-		if realm and realm ~= "" then name = name .. "-" .. realm end
-	end
-	return name:lower()
-end
-
+-- Players are told apart by their character GUID, which every game sees the same way. Names
+-- aren't safe for this: on WoW Forever a name has two parts ("Arch War"), UnitName gives them
+-- separately, and other players' games see the whole name.
 local function me()
-	if myName then return myName end
-	local name = fullName(UnitName("player"))
-	if name:find("-", 1, true) then myName = name end
-	return name
+	return UnitGUID("player") or "?"
 end
 
 -- Who answers a request, out of everyone who offered: the lowest score, so different requests go
 -- to different players.
-local function winner(key, names)
+local function winner(key, players)
 	local best, bestScore
-	for name in pairs(names) do
-		local score = hash(key .. "|" .. name)
-		if not best or score < bestScore or (score == bestScore and name < best) then
-			best, bestScore = name, score
+	for player in pairs(players) do
+		local score = hash(key .. "|" .. player)
+		if not best or score < bestScore or (score == bestScore and player < best) then
+			best, bestScore = player, score
 		end
 	end
 	return best
 end
 
 local function forgetOld(now)
-	for key, names in pairs(offers) do
-		for name, at in pairs(names) do
-			if now - at > WINDOW + SAME_ASK then names[name] = nil end
+	for key, players in pairs(offers) do
+		for player, at in pairs(players) do
+			if now - at > WINDOW + SAME_ASK then players[player] = nil end
 		end
-		if next(names) == nil then offers[key] = nil end
+		if next(players) == nil then offers[key] = nil end
 	end
 end
 
@@ -83,19 +72,19 @@ function ns.TakeTurns(chatType, text, answer)
 	-- Newer games return 0 for a message that went out, older ones true or nothing.
 	local sent = false
 	if C_ChatInfo and C_ChatInfo.SendAddonMessage then
-		local ok, result = pcall(C_ChatInfo.SendAddonMessage, PREFIX, key, channel)
+		local ok, result = pcall(C_ChatInfo.SendAddonMessage, PREFIX, key .. " " .. mine, channel)
 		sent = ok and (result == nil or result == true or result == 0)
 	end
 	-- If the others can't hear this player, there's nothing to agree on: answer right away.
 	if not sent then return answer() end
 
 	C_Timer.After(WINDOW, function()
-		local names = {}
-		for name, at in pairs(offers[key] or {}) do
-			if math.abs(at - now) <= SAME_ASK then names[name] = true end
+		local players = {}
+		for player, at in pairs(offers[key] or {}) do
+			if math.abs(at - now) <= SAME_ASK then players[player] = true end
 		end
-		names[mine] = true
-		if winner(key, names) == mine then answer() end
+		players[mine] = true
+		if winner(key, players) == mine then answer() end
 	end)
 end
 
@@ -109,11 +98,12 @@ end
 
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("CHAT_MSG_ADDON")
-frame:SetScript("OnEvent", function(_, _, prefix, message, _, sender)
+-- An offer is "<request key> <player GUID>", like "GUILD:1234567 Player-1234-0ABCDEF0".
+frame:SetScript("OnEvent", function(_, _, prefix, message)
 	if prefix ~= PREFIX then return end
-	if not (ns.Readable(message) and ns.Readable(sender)) then return end
-	if type(message) ~= "string" or type(sender) ~= "string" then return end
-	if not message:find("^%u[%u_]*:%d+$") then return end
-	offers[message] = offers[message] or {}
-	offers[message][fullName(sender)] = GetTime()
+	if not ns.Readable(message) or type(message) ~= "string" then return end
+	local key, player = message:match("^(%u[%u_]*:%d+) (Player%-[%w%-]+)$")
+	if not key then return end
+	offers[key] = offers[key] or {}
+	offers[key][player] = GetTime()
 end)
