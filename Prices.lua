@@ -264,21 +264,27 @@ end
 
 -- TSM's region numbers for an item, as notes for the answer: the share of auctions that sell
 -- ("region sale rate 12%") and how many sell a day ("region sells 34/day"). TSM gives the rate as
--- a fraction and the daily count as a plain number. Either is left out when TSM has none, or when
--- its option is off.
+-- a fraction and the daily count as a plain number, but rounds every custom price to a whole
+-- number, so a rate of 0.37 would come back as 0 and 0.62 as 1. Like TSM's own tooltip, ask for
+-- them times 1000 and divide. Either is left out when TSM has none, or when its option is off.
+local function tsmNumber(source, itemString)
+	local value = positive(pcall(TSM_API.GetCustomPriceValue, source .. " * 1000", itemString))
+	return value and value / 1000
+end
+
 local function regionNotes(link, notes)
 	if not (ns.db.showSaleRate or ns.db.showSoldPerDay) or not tsmLoaded() then return end
 	local ok, itemString = pcall(TSM_API.ToItemString, link)
 	if not ok or not itemString then return end
 	if ns.db.showSaleRate then
-		local rate = positive(pcall(TSM_API.GetCustomPriceValue, "dbregionsalerate", itemString))
+		local rate = tsmNumber("dbregionsalerate", itemString)
 		if rate then
 			local percent = rate * 100
 			notes[#notes + 1] = "region sale rate " .. (percent < 1 and format("%.1f", percent) or format("%.0f", percent)) .. "%"
 		end
 	end
 	if ns.db.showSoldPerDay then
-		local perDay = positive(pcall(TSM_API.GetCustomPriceValue, "dbregionsoldperday", itemString))
+		local perDay = tsmNumber("dbregionsoldperday", itemString)
 		if perDay then
 			notes[#notes + 1] = "region sells " .. (perDay < 10 and format("%.1f", perDay):gsub("%.0$", "") or grouped(floor(perDay + 0.5))) .. "/day"
 		end
