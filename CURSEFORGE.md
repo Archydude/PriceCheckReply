@@ -37,7 +37,7 @@ They type `?pc` with an item link and get this back:
 ### Ask any way you like
 - **Old-school style:** `?[Linen Cloth]` works too; `anyone have [Linen Cloth]?` doesn't count.
 - **Stacks:** `?pc 20 [Linen Cloth]` prices 20 and one.
-- **Several items** in one message, battle pets included.
+- **Several items** in one message, with a **total**: `?20[Linen Cloth] 5[Wool Cloth]` adds them up. Battle pets work too.
 - **Their choice of price:** `?pc tsm [item]` or `?pc auc [item]` picks the price addon.
 
 ### Honest answers

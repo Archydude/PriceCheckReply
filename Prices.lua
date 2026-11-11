@@ -265,6 +265,7 @@ end
 -- One item's part of the answer, naming it with `shown` (its link, or its plain name).
 -- request.addon is the price addon the asker picked; request.missing the one they picked that
 -- isn't installed, so the answer comes from the other one and says so.
+-- One item's part of the answer, and what it's worth in copper (nil when it has no price).
 local function describe(item, shown, request)
 	local what = item.count > 1 and format("%.0fx %s", item.count, shown) or shown
 	local details = item.kind == "item" and itemDetails(item.link)
@@ -272,7 +273,7 @@ local function describe(item, shown, request)
 	local vendorText = vendor and (", sells to a vendor for " .. ns.Coins(vendor * item.count)) or ""
 
 	local bound = details and CANT_AUCTION[details.bindType]
-	if bound then return what .. ": " .. bound .. ", can't be auctioned" .. vendorText end
+	if bound then return what .. ": " .. bound .. ", can't be auctioned" .. vendorText, nil end
 
 	local each, label, age = auctionPrice(item.link, item.kind, request.addon)
 	if each then
@@ -283,11 +284,22 @@ local function describe(item, shown, request)
 		if request.missing then notes[#notes + 1] = "no " .. ADDON_NAMES[request.missing] .. " here" end
 		local text = what .. ": " .. ns.Coins(each * item.count)
 		if #notes > 0 then text = text .. " (" .. table.concat(notes, ", ") .. ")" end
-		return text
+		return text, each * item.count
 	end
 	local text = what .. ": no auction data"
 	if request.addon then text = text .. " in " .. ADDON_NAMES[request.addon] end
-	return text .. vendorText
+	return text .. vendorText, nil
+end
+
+-- "Total: 6g 2s" for a request about several items, or nil. Items without a price aren't in it,
+-- and then it says how many are.
+local function totalPart(values, itemCount)
+	if itemCount < 2 or #values == 0 then return end
+	local sum = 0
+	for _, value in ipairs(values) do sum = sum + value end
+	local text = "Total: " .. ns.Coins(sum)
+	if #values < itemCount then text = text .. format(" (%d of %d priced)", #values, itemCount) end
+	return text
 end
 
 -- Whether a message can be answered: the price addon it asks for, or else the one in the
@@ -307,9 +319,7 @@ function ns.BuildReply(text)
 		request.missing, request.addon = request.addon, nil
 	end
 	local lines, current = {}, nil
-	for _, item in ipairs(items) do
-		local part = describe(item, item.link, request)
-		if #part > MAX_BYTES then part = describe(item, plainName(item.link), request) end
+	local function add(part)
 		if current and #current + 2 + #part <= MAX_BYTES then
 			current = current .. "; " .. part
 		else
@@ -317,7 +327,17 @@ function ns.BuildReply(text)
 			current = part
 		end
 	end
+	local values = {}
+	for _, item in ipairs(items) do
+		local part, value = describe(item, item.link, request)
+		if #part > MAX_BYTES then part, value = describe(item, plainName(item.link), request) end
+		if value then values[#values + 1] = value end
+		add(part)
+	end
+	local total = totalPart(values, #items)
+	if total then add(total) end
 	lines[#lines + 1] = current
-	while #lines > MAX_MESSAGES do table.remove(lines) end
+	-- Too long: drop item lines, never the line with the total.
+	while #lines > MAX_MESSAGES do table.remove(lines, total and #lines - 1 or #lines) end
 	return lines
 end
