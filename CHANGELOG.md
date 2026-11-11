@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.0
+- Ask about several items and get the total: `?100[Copper Bar] 100[Handful of Copper Bolts]` answers with the total first, `Total: 1g 95s for 2 items (TSM market value)`, then each item on its own. Items with no price are left out of the total, and it says so.
+- New options: TSM's region sale rate and how many sell per day, added to each price, like `(region sale rate 94%, region sells 2,847/day)`. Off by default.
+- Fixed: the lines of a long answer could reach the asker out of order.
+
 ## 1.1.3
 - Party and raid requests on WoW Forever are answered in party and raid chat again. Only guild and officer requests are whispered there, since those are the chats Forever's realms close to addons.
 - Fixed: on WoW Forever, when several of you in a party had the addon, a request could get two answers or none. Now it gets one.

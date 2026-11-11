@@ -37,25 +37,26 @@ They type `?pc` with an item link and get this back:
 ### Ask any way you like
 - **Old-school style:** `?[Linen Cloth]` works too; `anyone have [Linen Cloth]?` doesn't count.
 - **Stacks:** `?pc 20 [Linen Cloth]` prices 20 and one.
-- **Several items** in one message, with a **total**: `?20[Linen Cloth] 5[Wool Cloth]` adds them up. Battle pets work too.
+- **Shopping lists:** several items, each with its own amount, get the **total first**, then each item:
+  `Total: 3g 47s for 3 items (TSM market value)`
 - **Their choice of price:** `?pc tsm [item]` or `?pc auc [item]` picks the price addon.
+- **Battle pets** work too.
 
 ### Honest answers
-- **Items that can't be auctioned** say so: `binds when picked up, can't be auctioned, sells to a vendor for 5s`. Quest items and account-bound or warbound items too.
+- **Items that can't be auctioned** say so: `binds when picked up, can't be auctioned, sells to a vendor for 5s`.
 - **No price yet?** It says so, plus what a vendor pays.
 - **How fresh is it?** Auctionator prices say when they were updated: `updated 2h ago`.
-- **Does it sell?** Optionally add TSM's region sale rate and daily sales: `region sale rate 12%, region sells 34/day`.
+- **Does it sell?** Optionally add TSM's region sale rate and daily sales: `sells 94%, 2.8k/day`.
 
 ### You choose who gets answered
-Whispers from friends, Battle.net friends and guild mates are answered from the start. Turn on strangers, or guild, officer, party and raid chat, answered right there or by whisper. Realms that don't let addons write in guild chat, like WoW Forever's for now, get whispered answers there.
+Whispers from friends, Battle.net friends and guild mates are answered from the start. Turn on strangers, or guild, officer, party and raid chat, answered right there or by whisper. Realms that close guild chat to addons, like WoW Forever's for now, get whispered answers there.
 
 ### One answer, even in a big guild
-When several guild mates have PriceCheck Reply, a request still gets **just one answer**, from a different player each time. (Where the realm closes guild chat to addons, each of you whispers the asker.)
+When several of you have PriceCheck Reply, a request gets **just one answer**, from a different player each time. (Where the realm closes guild chat to addons, each of you whispers the asker.)
 
 ### Polite by design
 - It never answers your own messages or Game Masters.
 - No repeats within a few seconds, and a flood of requests won't get you muted for spam.
-- On Retail it stays quiet in dungeons, raids and battlegrounds, where the game hides chat from addons.
 
 ### Good to know
 - Needs **TradeSkillMaster** or **Auctionator** with prices for your realm.
@@ -70,11 +71,11 @@ When several guild mates have PriceCheck Reply, a request still gets **just one 
 
 ## B. Upload File form
 
-**File:** `dist\PriceCheckReply-1.1.3.zip`
+**File:** `dist\PriceCheckReply-1.2.0.zip`
 
 **Display name**
 ```
-PriceCheck Reply 1.1.3
+PriceCheck Reply 1.2.0
 ```
 
 **Release type:** `Release`
@@ -83,17 +84,8 @@ PriceCheck Reply 1.1.3
 
 **Changelog** (paste only the newest part; paste older parts too if they never went up)
 ```markdown
-1.1.3
-- Party and raid requests on WoW Forever are answered in party and raid chat again. Only guild and officer requests are whispered there, since those are the chats Forever's realms close to addons.
-- Fixed: on WoW Forever, when several of you in a party had the addon, a request could get two answers or none. Now it gets one.
-
-1.1.2
-- Fixed: on WoW Forever, guild, officer, party and raid requests caused an "action blocked" error and got no answer. Forever's realms don't let addons write in chat, so on realms like that those requests are now answered by whisper. Each player there with the addon whispers the asker, since the addons can't agree on one answerer. Where the realm allows addon chat, nothing changes.
-
-1.1.1
-- Works on every version of WoW again: Retail, Mists of Pandaria Classic, TBC Anniversary, WoW Forever and Classic Era.
-
-1.1.0
-- The old-school way of asking works too: `?[Linen Cloth]`, a question mark right before the item link. Everyone with the addon answers it, and a question mark in normal chat, like `anyone have [Linen Cloth]?`, doesn't count.
-- More ways to ask about a stack: `?x20 [Linen Cloth]`, `20 ?[Linen Cloth]`, and a plain number at the end of the message, like `?pc [Linen Cloth] 20`.
+1.2.0
+- Ask about several items and get the total: `?100[Copper Bar] 100[Handful of Copper Bolts]` answers with the total first, `Total: 1g 95s for 2 items (TSM market value)`, then each item on its own. Items with no price are left out of the total, and it says so.
+- New options: TSM's region sale rate and how many sell per day, added to each price, like `(region sale rate 94%, region sells 2,847/day)`. Off by default.
+- Fixed: the lines of a long answer could reach the asker out of order.
 ```
