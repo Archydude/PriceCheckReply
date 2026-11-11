@@ -262,6 +262,29 @@ local function plainName(link)
 	return (name:gsub("|A.-|a", ""):gsub("|T.-|t", ""):gsub("%s+%]", "]"))
 end
 
+-- TSM's region numbers for an item, as notes for the answer: the share of auctions that sell
+-- ("region sale rate 12%") and how many sell a day ("region sells 34/day"). TSM gives the rate as
+-- a fraction and the daily count as a plain number. Either is left out when TSM has none, or when
+-- its option is off.
+local function regionNotes(link, notes)
+	if not (ns.db.showSaleRate or ns.db.showSoldPerDay) or not tsmLoaded() then return end
+	local ok, itemString = pcall(TSM_API.ToItemString, link)
+	if not ok or not itemString then return end
+	if ns.db.showSaleRate then
+		local rate = positive(pcall(TSM_API.GetCustomPriceValue, "dbregionsalerate", itemString))
+		if rate then
+			local percent = rate * 100
+			notes[#notes + 1] = "region sale rate " .. (percent < 1 and format("%.1f", percent) or format("%.0f", percent)) .. "%"
+		end
+	end
+	if ns.db.showSoldPerDay then
+		local perDay = positive(pcall(TSM_API.GetCustomPriceValue, "dbregionsoldperday", itemString))
+		if perDay then
+			notes[#notes + 1] = "region sells " .. (perDay < 10 and format("%.1f", perDay):gsub("%.0$", "") or grouped(floor(perDay + 0.5))) .. "/day"
+		end
+	end
+end
+
 -- One item's part of the answer, naming it with `shown` (its link, or its plain name).
 -- request.addon is the price addon the asker picked; request.missing the one they picked that
 -- isn't installed, so the answer comes from the other one and says so.
@@ -281,6 +304,7 @@ local function describe(item, shown, request)
 		if item.count > 1 then notes[#notes + 1] = ns.Coins(each) .. " each" end
 		if label and (ns.db.showSource or request.addon or request.missing) then notes[#notes + 1] = label end
 		if age and ns.db.showAge then notes[#notes + 1] = age end
+		regionNotes(item.link, notes)
 		if request.missing then notes[#notes + 1] = "no " .. ADDON_NAMES[request.missing] .. " here" end
 		local text = what .. ": " .. ns.Coins(each * item.count)
 		if #notes > 0 then text = text .. " (" .. table.concat(notes, ", ") .. ")" end

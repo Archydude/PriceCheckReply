@@ -90,6 +90,8 @@ ns.DEFAULTS = {
 	tsmSource = "dbmarket",
 	showSource = true,       -- say where each price comes from
 	showAge = true,          -- say how old an Auctionator price is
+	showSaleRate = false,    -- say TSM's region sale rate
+	showSoldPerDay = false,  -- say how many TSM says sell per day in the region
 	vendorPrice = true,      -- mention the vendor price when there's no auction price
 }
 

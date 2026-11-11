@@ -61,6 +61,10 @@ To keep chat tidy, the same answer isn't sent to the same place twice within a f
 - **TSM price:** market value (default), lowest auction right now, historical price, or region market average.
 - **Say where prices come from:** adds `(TSM market value)` or `(Auctionator)` to each answer.
 - **Say how old prices are:** adds when Auctionator last saw the item: `updated 2h ago` for an item seen in today's scan, `updated today` when Auctionator can't say more, then `updated yesterday` or `updated 5 days ago`. TSM doesn't tell other addons how old its prices are, so TSM answers don't get one. On by default.
+- **Say the region sale rate:** adds how many of the item's auctions sell across your region, from TSM: `region sale rate 12%`. Off by default.
+- **Say how many sell per day:** adds how many of the item sell each day across your region, from TSM: `region sells 34/day`. Off by default.
+
+  Both need TSM, and work with Auctionator prices too. Items TSM has no region numbers for don't get them.
 - **Mention vendor price:** for items with no auction price.
 
 ## Commands

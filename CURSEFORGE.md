@@ -44,6 +44,7 @@ They type `?pc` with an item link and get this back:
 - **Items that can't be auctioned** say so: `binds when picked up, can't be auctioned, sells to a vendor for 5s`. Quest items and account-bound or warbound items too.
 - **No price yet?** It says so, plus what a vendor pays.
 - **How fresh is it?** Auctionator prices say when they were updated: `updated 2h ago`.
+- **Does it sell?** Optionally add TSM's region sale rate and daily sales: `region sale rate 12%, region sells 34/day`.
 
 ### You choose who gets answered
 Whispers from friends, Battle.net friends and guild mates are answered from the start. Turn on strangers, or guild, officer, party and raid chat, answered right there or by whisper. Realms that don't let addons write in guild chat, like WoW Forever's for now, get whispered answers there.

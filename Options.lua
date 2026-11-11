@@ -98,6 +98,10 @@ function ns.CreateOptions()
 		"Add the price addon to each answer, like \"(TSM market value)\".")
 	checkbox("showAge", "Say how old prices are",
 		"Add when Auctionator last saw each item, like \"updated 2h ago\" or \"updated 3 days ago\". TSM doesn't tell other addons how old its prices are, so TSM answers don't get one.")
+	checkbox("showSaleRate", "Say the region sale rate",
+		"Add TSM's region sale rate to each price: how many of the item's auctions sell, like \"region sale rate 12%\". Needs TSM; works alongside Auctionator prices too.")
+	checkbox("showSoldPerDay", "Say how many sell per day",
+		"Add how many of the item TSM says sell each day across your region, like \"region sells 34/day\". Needs TSM; works alongside Auctionator prices too.")
 	checkbox("vendorPrice", "Mention vendor price",
 		"When an item has no auction price, say what a vendor pays for it instead.")
 
