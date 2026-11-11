@@ -262,32 +262,46 @@ local function plainName(link)
 	return (name:gsub("|A.-|a", ""):gsub("|T.-|t", ""):gsub("%s+%]", "]"))
 end
 
--- TSM's region numbers for an item, as notes for the answer: the share of auctions that sell
--- ("region sale rate 12%") and how many sell a day ("region sells 34/day"). TSM gives the rate as
--- a fraction and the daily count as a plain number, but rounds every custom price to a whole
--- number, so a rate of 0.37 would come back as 0 and 0.62 as 1. Like TSM's own tooltip, ask for
--- them times 1000 and divide. Either is left out when TSM has none, or when its option is off.
+-- TSM's region numbers for an item: the share of its auctions that sell, and how many sell a
+-- day. TSM gives the rate as a fraction and the daily count as a plain number, but rounds every
+-- custom price to a whole number, so a rate of 0.37 would come back as 0 and 0.62 as 1. Like
+-- TSM's own tooltip, ask for them times 1000 and divide. Either is nil when TSM has none, or when
+-- its option is off.
 local function tsmNumber(source, itemString)
 	local value = positive(pcall(TSM_API.GetCustomPriceValue, source .. " * 1000", itemString))
 	return value and value / 1000
 end
 
-local function regionNotes(link, notes)
+local function regionStats(link)
 	if not (ns.db.showSaleRate or ns.db.showSoldPerDay) or not tsmLoaded() then return end
 	local ok, itemString = pcall(TSM_API.ToItemString, link)
 	if not ok or not itemString then return end
-	if ns.db.showSaleRate then
-		local rate = tsmNumber("dbregionsalerate", itemString)
-		if rate then
-			local percent = rate * 100
-			notes[#notes + 1] = "region sale rate " .. (percent < 1 and format("%.1f", percent) or format("%.0f", percent)) .. "%"
-		end
+	return ns.db.showSaleRate and tsmNumber("dbregionsalerate", itemString) or nil,
+		ns.db.showSoldPerDay and tsmNumber("dbregionsoldperday", itemString) or nil
+end
+
+-- "94%", or "0.4%" under one percent.
+local function percentText(rate)
+	local percent = rate * 100
+	return (percent < 1 and format("%.1f", percent) or format("%.0f", percent)) .. "%"
+end
+
+-- "2.4" under ten, then whole numbers: "2,847" in full, or "2.8k" and "1.2m" when short.
+local function perDayText(perDay, short)
+	if perDay < 10 then return (format("%.1f", perDay):gsub("%.0$", "")) end
+	if short and perDay >= 999500 then return (format("%.1f", perDay / 1000000):gsub("%.0$", "")) .. "m" end
+	if short and perDay >= 999.5 then return (format("%.1f", perDay / 1000):gsub("%.0$", "")) .. "k" end
+	return grouped(floor(perDay + 0.5))
+end
+
+-- The region numbers as notes. In full for one item ("region sale rate 94%", "region sells
+-- 2,847/day"); short in a list ("94%", "2.8k/day"), where the total line says what they are.
+local function regionNotes(info, notes, short)
+	if info.saleRate then
+		notes[#notes + 1] = (short and "" or "region sale rate ") .. percentText(info.saleRate)
 	end
-	if ns.db.showSoldPerDay then
-		local perDay = tsmNumber("dbregionsoldperday", itemString)
-		if perDay then
-			notes[#notes + 1] = "region sells " .. (perDay < 10 and format("%.1f", perDay):gsub("%.0$", "") or grouped(floor(perDay + 0.5))) .. "/day"
-		end
+	if info.perDay then
+		notes[#notes + 1] = (short and "" or "region sells ") .. perDayText(info.perDay, short) .. "/day"
 	end
 end
 
@@ -295,7 +309,7 @@ end
 -- from, how old it is, TSM's region numbers, or why it has no price. request.addon is the price
 -- addon the asker picked.
 local function lookUp(item, request)
-	local info = { item = item, region = {} }
+	local info = { item = item }
 	local details = item.kind == "item" and itemDetails(item.link)
 	local vendor = ns.db.vendorPrice and details and details.sellPrice
 	info.vendorText = vendor and (", sells to a vendor for " .. ns.Coins(vendor * item.count)) or ""
@@ -306,7 +320,7 @@ local function lookUp(item, request)
 		info.each, info.value = each, each * item.count
 		if label and (ns.db.showSource or request.addon or request.missing) then info.label = label end
 		if age and ns.db.showAge then info.age = age end
-		regionNotes(item.link, info.region)
+		info.saleRate, info.perDay = regionStats(item.link)
 	end
 	return info
 end
@@ -339,7 +353,7 @@ local function single(info, shown, request)
 	if info.item.count > 1 then notes[#notes + 1] = ns.Coins(info.each) .. " each" end
 	if info.label then notes[#notes + 1] = info.label end
 	if info.age then notes[#notes + 1] = info.age end
-	for _, note in ipairs(info.region) do notes[#notes + 1] = note end
+	regionNotes(info, notes, false)
 	if request.missing then notes[#notes + 1] = "no " .. ADDON_NAMES[request.missing] .. " here" end
 	return withNotes(what .. ": " .. ns.Coins(info.value), notes)
 end
@@ -352,7 +366,7 @@ local function listed(info, shown, request, shared)
 	local notes = {}
 	if info.label and info.label ~= shared.label then notes[#notes + 1] = info.label end
 	if info.age and info.age ~= shared.age then notes[#notes + 1] = info.age end
-	for _, note in ipairs(info.region) do notes[#notes + 1] = note end
+	regionNotes(info, notes, true)
 	return withNotes(what .. " " .. ns.Coins(info.value), notes)
 end
 
@@ -384,6 +398,15 @@ local function totalLine(infos, request, shared)
 	if shared.label then notes[#notes + 1] = shared.label end
 	if shared.age then notes[#notes + 1] = shared.age end
 	if request.missing then notes[#notes + 1] = "no " .. ADDON_NAMES[request.missing] .. " here" end
+	-- What the short numbers after each item are.
+	local hasRate, hasPerDay
+	for _, info in ipairs(infos) do
+		hasRate, hasPerDay = hasRate or info.saleRate ~= nil, hasPerDay or info.perDay ~= nil
+	end
+	local legend = (hasRate and hasPerDay and "sale rate, sold/day") or (hasRate and "sale rate")
+		or (hasPerDay and "sold/day") or nil
+	if legend and #notes > 0 then return text .. " (" .. table.concat(notes, ", ") .. "; " .. legend .. ")" end
+	if legend then return text .. " (" .. legend .. ")" end
 	return withNotes(text, notes)
 end
 

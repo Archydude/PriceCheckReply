@@ -25,6 +25,9 @@ local REPEAT_WINDOW = 10
 -- At most this many lines sent in any RATE_WINDOW seconds, so a flood of requests can't get the
 -- player muted for spam.
 local RATE_LINES, RATE_WINDOW = 8, 15
+-- Seconds between the lines of one answer. Lines sent in the same moment can reach the asker out
+-- of order (seen on WoW Forever), and the total has to come first.
+local LINE_GAP = 0.3
 
 local SendChat = (C_ChatInfo and C_ChatInfo.SendChatMessage) or SendChatMessage
 local SendBNetWhisper = (C_BattleNet and C_BattleNet.SendWhisper) or BNSendWhisper
@@ -139,12 +142,19 @@ local function send(lines, chatType, target)
 	end
 	lastSent[place .. answer] = now
 
-	for _, line in ipairs(lines) do
-		sendTimes[#sendTimes + 1] = now
+	local function sendLine(line)
 		if chatType == "BN_WHISPER" then
 			SendBNetWhisper(target, line)
 		else
 			SendChat(line, chatType, nil, target)
+		end
+	end
+	for i, line in ipairs(lines) do
+		sendTimes[#sendTimes + 1] = now
+		if i == 1 then
+			sendLine(line)
+		else
+			C_Timer.After((i - 1) * LINE_GAP, function() sendLine(line) end)
 		end
 	end
 end
