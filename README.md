@@ -71,7 +71,7 @@ To keep chat tidy, the same answer isn't sent to the same place twice within a f
 - **Say the region sale rate:** adds how many of the item's auctions sell across your region, from TSM: `region sale rate 12%`. Off by default.
 - **Say how many sell per day:** adds how many of the item sell each day across your region, from TSM: `region sells 34/day`. Off by default.
 
-  Both need TSM, and work with Auctionator prices too. Items TSM has no region numbers for don't get them. In an answer about several items the numbers are short, like `(94%, 2.8k/day)`, and the total line says what they are: `(TSM market value; sale rate, sold/day)`.
+  Both need TSM, and work with Auctionator prices too. Items TSM has no region numbers for don't get them. In an answer about several items the numbers are short: `(sells 94%, 2.8k/day)`.
 - **Mention vendor price:** for items with no auction price.
 
 ## Commands

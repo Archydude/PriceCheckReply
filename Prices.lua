@@ -295,10 +295,10 @@ local function perDayText(perDay, short)
 end
 
 -- The region numbers as notes. In full for one item ("region sale rate 94%", "region sells
--- 2,847/day"); short in a list ("94%", "2.8k/day"), where the total line says what they are.
+-- 2,847/day"); short in a list ("sells 94%", "2.8k/day").
 local function regionNotes(info, notes, short)
 	if info.saleRate then
-		notes[#notes + 1] = (short and "" or "region sale rate ") .. percentText(info.saleRate)
+		notes[#notes + 1] = (short and "sells " or "region sale rate ") .. percentText(info.saleRate)
 	end
 	if info.perDay then
 		notes[#notes + 1] = (short and "" or "region sells ") .. perDayText(info.perDay, short) .. "/day"
@@ -398,15 +398,6 @@ local function totalLine(infos, request, shared)
 	if shared.label then notes[#notes + 1] = shared.label end
 	if shared.age then notes[#notes + 1] = shared.age end
 	if request.missing then notes[#notes + 1] = "no " .. ADDON_NAMES[request.missing] .. " here" end
-	-- What the short numbers after each item are.
-	local hasRate, hasPerDay
-	for _, info in ipairs(infos) do
-		hasRate, hasPerDay = hasRate or info.saleRate ~= nil, hasPerDay or info.perDay ~= nil
-	end
-	local legend = (hasRate and hasPerDay and "sale rate, sold/day") or (hasRate and "sale rate")
-		or (hasPerDay and "sold/day") or nil
-	if legend and #notes > 0 then return text .. " (" .. table.concat(notes, ", ") .. "; " .. legend .. ")" end
-	if legend then return text .. " (" .. legend .. ")" end
 	return withNotes(text, notes)
 end
 
