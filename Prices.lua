@@ -285,45 +285,100 @@ local function regionNotes(link, notes)
 	end
 end
 
--- One item's part of the answer, naming it with `shown` (its link, or its plain name).
--- request.addon is the price addon the asker picked; request.missing the one they picked that
--- isn't installed, so the answer comes from the other one and says so.
--- One item's part of the answer, and what it's worth in copper (nil when it has no price).
-local function describe(item, shown, request)
-	local what = item.count > 1 and format("%.0fx %s", item.count, shown) or shown
+-- What the answer needs to know about one item: its price for the count asked, where that came
+-- from, how old it is, TSM's region numbers, or why it has no price. request.addon is the price
+-- addon the asker picked.
+local function lookUp(item, request)
+	local info = { item = item, region = {} }
 	local details = item.kind == "item" and itemDetails(item.link)
 	local vendor = ns.db.vendorPrice and details and details.sellPrice
-	local vendorText = vendor and (", sells to a vendor for " .. ns.Coins(vendor * item.count)) or ""
-
-	local bound = details and CANT_AUCTION[details.bindType]
-	if bound then return what .. ": " .. bound .. ", can't be auctioned" .. vendorText, nil end
-
+	info.vendorText = vendor and (", sells to a vendor for " .. ns.Coins(vendor * item.count)) or ""
+	info.bound = details and CANT_AUCTION[details.bindType]
+	if info.bound then return info end
 	local each, label, age = auctionPrice(item.link, item.kind, request.addon)
 	if each then
-		local notes = {}
-		if item.count > 1 then notes[#notes + 1] = ns.Coins(each) .. " each" end
-		if label and (ns.db.showSource or request.addon or request.missing) then notes[#notes + 1] = label end
-		if age and ns.db.showAge then notes[#notes + 1] = age end
-		regionNotes(item.link, notes)
-		if request.missing then notes[#notes + 1] = "no " .. ADDON_NAMES[request.missing] .. " here" end
-		local text = what .. ": " .. ns.Coins(each * item.count)
-		if #notes > 0 then text = text .. " (" .. table.concat(notes, ", ") .. ")" end
-		return text, each * item.count
+		info.each, info.value = each, each * item.count
+		if label and (ns.db.showSource or request.addon or request.missing) then info.label = label end
+		if age and ns.db.showAge then info.age = age end
+		regionNotes(item.link, info.region)
 	end
-	local text = what .. ": no auction data"
-	if request.addon then text = text .. " in " .. ADDON_NAMES[request.addon] end
-	return text .. vendorText, nil
+	return info
 end
 
--- "Total: 6g 2s" for a request about several items, or nil. Items without a price aren't in it,
--- and then it says how many are.
-local function totalPart(values, itemCount)
-	if itemCount < 2 or #values == 0 then return end
-	local sum = 0
-	for _, value in ipairs(values) do sum = sum + value end
+-- "20x [Linen Cloth]", or just the item for one. `shown` is its link, or its plain name when the
+-- link won't fit.
+local function named(info, shown)
+	return info.item.count > 1 and format("%.0fx %s", info.item.count, shown) or shown
+end
+
+-- An item with no price: bound, or no auction data.
+local function unpriced(info, what, request)
+	if info.bound then return what .. ": " .. info.bound .. ", can't be auctioned" .. info.vendorText end
+	local text = what .. ": no auction data"
+	if request.addon then text = text .. " in " .. ADDON_NAMES[request.addon] end
+	return text .. info.vendorText
+end
+
+local function withNotes(text, notes)
+	if #notes == 0 then return text end
+	return text .. " (" .. table.concat(notes, ", ") .. ")"
+end
+
+-- The answer about a single item: "20x [Linen Cloth]: 5g 6s (25s 30c each, TSM market value)".
+-- request.missing is the addon the asker picked that isn't installed.
+local function single(info, shown, request)
+	local what = named(info, shown)
+	if not info.value then return unpriced(info, what, request) end
+	local notes = {}
+	if info.item.count > 1 then notes[#notes + 1] = ns.Coins(info.each) .. " each" end
+	if info.label then notes[#notes + 1] = info.label end
+	if info.age then notes[#notes + 1] = info.age end
+	for _, note in ipairs(info.region) do notes[#notes + 1] = note end
+	if request.missing then notes[#notes + 1] = "no " .. ADDON_NAMES[request.missing] .. " here" end
+	return withNotes(what .. ": " .. ns.Coins(info.value), notes)
+end
+
+-- One item in the list under a total: "200x [Linen Cloth] 54s". Where its price came from and
+-- how old it is go on the total line instead when every item shares them (`shared`).
+local function listed(info, shown, request, shared)
+	local what = named(info, shown)
+	if not info.value then return unpriced(info, what, request) end
+	local notes = {}
+	if info.label and info.label ~= shared.label then notes[#notes + 1] = info.label end
+	if info.age and info.age ~= shared.age then notes[#notes + 1] = info.age end
+	for _, note in ipairs(info.region) do notes[#notes + 1] = note end
+	return withNotes(what .. " " .. ns.Coins(info.value), notes)
+end
+
+-- The one value every priced item has for `key` ("label" or "age"), or nil when they differ or
+-- some have none.
+local function sharedValue(infos, key)
+	local value
+	for _, info in ipairs(infos) do
+		if info.value then
+			local this = info[key]
+			if not this or (value and value ~= this) then return end
+			value = this
+		end
+	end
+	return value
+end
+
+-- "Total: 3g 47s for 3 items (TSM market value)". Items without a price aren't in it, and then
+-- it says so: "for 2 of 3 items". Nil when no item has a price.
+local function totalLine(infos, request, shared)
+	local sum, priced = 0, 0
+	for _, info in ipairs(infos) do
+		if info.value then sum, priced = sum + info.value, priced + 1 end
+	end
+	if priced == 0 then return end
 	local text = "Total: " .. ns.Coins(sum)
-	if #values < itemCount then text = text .. format(" (%d of %d priced)", #values, itemCount) end
-	return text
+		.. (priced < #infos and format(" for %d of %d items", priced, #infos) or format(" for %d items", #infos))
+	local notes = {}
+	if shared.label then notes[#notes + 1] = shared.label end
+	if shared.age then notes[#notes + 1] = shared.age end
+	if request.missing then notes[#notes + 1] = "no " .. ADDON_NAMES[request.missing] .. " here" end
+	return withNotes(text, notes)
 end
 
 -- Whether a message can be answered: the price addon it asks for, or else the one in the
@@ -333,8 +388,10 @@ function ns.CanAnswer(text)
 	return (addon and LOADED[addon]()) or ns.HasPriceAddon()
 end
 
--- The chat lines answering a message, or nil when it has no item or pet links. Parts are packed
--- into as few lines as fit, and a part too long for a line on its own loses its link.
+-- The chat lines answering a message, or nil when it has no item or pet links. One item gets one
+-- line. Several get the total first, then the items packed into as few lines as fit; a part too
+-- long for a line on its own loses its link, and items that don't fit in MAX_MESSAGES lines are
+-- left out and counted ("and 2 more").
 function ns.BuildReply(text)
 	local items = ns.ReadItems(text)
 	if #items == 0 then return end
@@ -342,26 +399,40 @@ function ns.BuildReply(text)
 	if request.addon and not LOADED[request.addon]() then
 		request.missing, request.addon = request.addon, nil
 	end
-	local lines, current = {}, nil
-	local function add(part)
+	local infos = {}
+	for i, item in ipairs(items) do infos[i] = lookUp(item, request) end
+
+	if #infos == 1 then
+		local part = single(infos[1], items[1].link, request)
+		if #part > MAX_BYTES then part = single(infos[1], plainName(items[1].link), request) end
+		return { part }
+	end
+
+	local shared = { label = sharedValue(infos, "label"), age = sharedValue(infos, "age") }
+	local lines, perLine = {}, {}
+	local total = totalLine(infos, request, shared)
+	if total then lines[1], perLine[1] = total, 0 end
+	local current, count
+	for _, info in ipairs(infos) do
+		local part = listed(info, info.item.link, request, shared)
+		if #part > MAX_BYTES then part = listed(info, plainName(info.item.link), request, shared) end
 		if current and #current + 2 + #part <= MAX_BYTES then
-			current = current .. "; " .. part
+			current, count = current .. "; " .. part, count + 1
 		else
-			if current then lines[#lines + 1] = current end
-			current = part
+			if current then lines[#lines + 1], perLine[#lines + 1] = current, count end
+			current, count = part, 1
 		end
 	end
-	local values = {}
-	for _, item in ipairs(items) do
-		local part, value = describe(item, item.link, request)
-		if #part > MAX_BYTES then part, value = describe(item, plainName(item.link), request) end
-		if value then values[#values + 1] = value end
-		add(part)
+	lines[#lines + 1], perLine[#lines + 1] = current, count
+
+	if #lines > MAX_MESSAGES then
+		local left = 0
+		while #lines > MAX_MESSAGES do
+			left = left + perLine[#lines]
+			table.remove(lines); table.remove(perLine)
+		end
+		local more = format("; and %d more", left)
+		if #lines[#lines] + #more <= MAX_BYTES then lines[#lines] = lines[#lines] .. more end
 	end
-	local total = totalPart(values, #items)
-	if total then add(total) end
-	lines[#lines + 1] = current
-	-- Too long: drop item lines, never the line with the total.
-	while #lines > MAX_MESSAGES do table.remove(lines, total and #lines - 1 or #lines) end
 	return lines
 end
