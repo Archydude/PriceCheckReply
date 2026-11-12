@@ -49,10 +49,10 @@ They type `?pc [Linen Cloth]`, or just `?[Linen Cloth]`, and get this back:
 - **Does it sell?** Optionally add TSM's region sale rate and daily sales: `region sale rate 94%, region sells 2,847/day`.
 
 ### You choose who gets answered
-Whispers from friends, Battle.net friends and guild mates are answered from the start. Turn on strangers, or guild, officer, party and raid chat, answered right there or by whisper. Realms that close guild and officer chat to addons, like WoW Forever's for now, get whispered answers there.
+Whispers from friends, Battle.net friends and guild mates are answered from the start. Turn on strangers, or guild, officer, party and raid chat, answered right there or by whisper. On WoW Forever, guild and officer requests always get a whisper, since the realms don't let addons write there for now.
 
-### One answer, even in a big guild
-When several of you have PriceCheck Reply, a request gets **just one answer**, and who answers changes from request to request.
+### When several of you have it
+In party and raid chat, a request gets **just one answer**, and who answers changes from request to request. Guild and officer chat work the same where the realm lets addons write there. On WoW Forever it doesn't, so each of you whispers the asker.
 
 ### Polite by design
 - It never answers your own messages or Game Masters.

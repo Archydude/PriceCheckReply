@@ -55,7 +55,7 @@ Some realms don't let addons write in guild or officer chat. WoW Forever's realm
 | Officer chat | Officer chat |
 | Party and raid chat | Party, raid and instance chat |
 
-**When several of you have PriceCheck Reply**, a request in guild, officer, party or raid chat still gets just one answer, about a second later, instead of one from everyone. Who answers changes from request to request. Someone who has that chat set to Don't answer is left out, so one of the others answers. Whispers are answered right away, since only you got them.
+**When several of you have PriceCheck Reply**, a request in party or raid chat still gets just one answer, and so does one in guild or officer chat where the realm lets addons write there (not on WoW Forever, see above). It comes about a second later, instead of one from everyone. Who answers changes from request to request. Someone who has that chat set to Don't answer is left out, so one of the others answers. Whispers are answered right away, since only you got them.
 
 On Retail, inside dungeons, raids, Mythic+ and battlegrounds the game doesn't let addons read chat or send it during fights, so nothing gets answered there.
 
