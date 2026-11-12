@@ -43,7 +43,7 @@ They type `?pc` with an item link and get this back:
 - **Battle pets** work too.
 
 ### Honest answers
-- **Items that can't be auctioned** say so: `binds when picked up, can't be auctioned, sells to a vendor for 5s`.
+- **Items that can't be auctioned** say so: `binds when picked up, can't be auctioned`.
 - **No price yet?** It says so, plus what a vendor pays.
 - **How fresh is it?** Auctionator prices say when they were updated: `updated 2h ago`.
 - **Does it sell?** Optionally add TSM's region sale rate and daily sales: `region sale rate 94%, region sells 2,847/day`.
@@ -52,7 +52,7 @@ They type `?pc` with an item link and get this back:
 Whispers from friends, Battle.net friends and guild mates are answered from the start. Turn on strangers, or guild, officer, party and raid chat, answered right there or by whisper. Realms that close guild and officer chat to addons, like WoW Forever's for now, get whispered answers there.
 
 ### One answer, even in a big guild
-When several of you have PriceCheck Reply, a request gets **just one answer**, and who answers changes from request to request. (Where the realm closes guild chat to addons, each of you whispers the asker.)
+When several of you have PriceCheck Reply, a request gets **just one answer**, and who answers changes from request to request.
 
 ### Polite by design
 - It never answers your own messages or Game Masters.
