@@ -13,7 +13,7 @@ PriceCheck Reply
 
 **Summary**
 ```
-Friends and guild mates type ?pc or ? with an item link and get your TSM or Auctionator price back. One answer per request, even when the whole guild has it.
+Friends and guild mates type ?pc or ? with an item link and get your TSM or Auctionator price back, with a total when they ask about several items.
 ```
 
 **Main category:** `Auction & Economy`
@@ -46,17 +46,18 @@ They type `?pc` with an item link and get this back:
 - **Items that can't be auctioned** say so: `binds when picked up, can't be auctioned, sells to a vendor for 5s`.
 - **No price yet?** It says so, plus what a vendor pays.
 - **How fresh is it?** Auctionator prices say when they were updated: `updated 2h ago`.
-- **Does it sell?** Optionally add TSM's region sale rate and daily sales: `sells 94%, 2.8k/day`.
+- **Does it sell?** Optionally add TSM's region sale rate and daily sales: `region sale rate 94%, region sells 2,847/day`.
 
 ### You choose who gets answered
-Whispers from friends, Battle.net friends and guild mates are answered from the start. Turn on strangers, or guild, officer, party and raid chat, answered right there or by whisper. Realms that close guild chat to addons, like WoW Forever's for now, get whispered answers there.
+Whispers from friends, Battle.net friends and guild mates are answered from the start. Turn on strangers, or guild, officer, party and raid chat, answered right there or by whisper. Realms that close guild and officer chat to addons, like WoW Forever's for now, get whispered answers there.
 
 ### One answer, even in a big guild
-When several of you have PriceCheck Reply, a request gets **just one answer**, from a different player each time. (Where the realm closes guild chat to addons, each of you whispers the asker.)
+When several of you have PriceCheck Reply, a request gets **just one answer**, and who answers changes from request to request. (Where the realm closes guild chat to addons, each of you whispers the asker.)
 
 ### Polite by design
 - It never answers your own messages or Game Masters.
 - No repeats within a few seconds, and a flood of requests won't get you muted for spam.
+- On Retail it stays quiet in dungeons, raids and battlegrounds, where the game hides chat from addons.
 
 ### Good to know
 - Needs **TradeSkillMaster** or **Auctionator** with prices for your realm.
