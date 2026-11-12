@@ -31,12 +31,12 @@ Friends and guild mates type ?pc or ? with an item link and get your TSM or Auct
 
 When a guild mate asks what something sells for, PriceCheck Reply answers with your **TSM or Auctionator** price, so you don't have to look it up.
 
-They type `?pc` with an item link and get this back:
+They type `?pc [Linen Cloth]`, or just `?[Linen Cloth]`, and get this back:
 `[Linen Cloth]: 25s 30c (TSM market value)`
 
 ### Ask any way you like
-- **Old-school style:** `?[Linen Cloth]` works too; `anyone have [Linen Cloth]?` doesn't count.
-- **Stacks:** `?pc 20 [Linen Cloth]` prices 20 and one.
+- **The short `?`:** a `?` right before the link asks, old-school style. `anyone have [Linen Cloth]?` doesn't count.
+- **Stacks:** `?pc 20 [Linen Cloth]` or `?20 [Linen Cloth]` prices 20 and one.
 - **Shopping lists:** several items, each with its own amount, get the **total first**, then each item:
   `Total: 3g 47s for 3 items (TSM market value)`
 - **Their choice of price:** `?pc tsm [item]` or `?pc auc [item]` picks the price addon.
