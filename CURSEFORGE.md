@@ -37,7 +37,7 @@ They type `?pc [Linen Cloth]`, or just `?[Linen Cloth]`, and get this back:
 ### Ask any way you like
 - **The short `?`:** a `?` right before the link asks, old-school style. `anyone have [Linen Cloth]?` doesn't count.
 - **Stacks:** `?pc 20 [Linen Cloth]` or `?20 [Linen Cloth]` prices 20 and one.
-- **Shopping lists:** several items, each with its own amount, get the **total first**, then each item:
+- **Several items:** up to 6 in one message, each with its own amount. The answer starts with the **total**, then lists each item:
   `Total: 3g 47s for 3 items (TSM market value)`
 - **Their choice of price:** `?pc tsm [item]` or `?pc auc [item]` picks the price addon.
 - **Battle pets** work too.
