@@ -2,10 +2,13 @@
 ArchdudeWhatsNew:Register("PriceCheckReply", {
 	title = "PriceCheck Reply",
 	icon = "Interface\\Icons\\INV_Misc_Coin_02",
-	version = "1.2.0",
+	version = "1.2.1",
 	seen = "PriceCheckReplyWhatsNew",
 	saved = { "PriceCheckReplyDB" },
 	changes = {
+		{ "1.2.1",
+			"Fixed an error when opening the options during combat (\"tried to call the protected function 'OpenSettingsPanel()'\"). The options now open as soon as the fight ends.",
+		},
 		{ "1.2.0",
 			"Ask about several items and get the total: |cffffd100?100[Copper Bar] 100[Handful of Copper Bolts]|r answers with the total first, |cffffd100Total: 1g 95s for 2 items (TSM market value)|r, then each item on its own. Items with no price are left out of the total, and it says so.",
 			"New options: TSM's region sale rate and how many sell per day, added to each price, like |cffffd100(region sale rate 94%, region sells 2,847/day)|r. Off by default.",

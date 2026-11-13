@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.2.1
+- Fixed an error when opening the options during combat ("tried to call the protected function 'OpenSettingsPanel()'"). The options now open as soon as the fight ends.
+
 ## 1.2.0
 - Ask about several items and get the total: `?100[Copper Bar] 100[Handful of Copper Bolts]` answers with the total first, `Total: 1g 95s for 2 items (TSM market value)`, then each item on its own. Items with no price are left out of the total, and it says so.
 - New options: TSM's region sale rate and how many sell per day, added to each price, like `(region sale rate 94%, region sells 2,847/day)`. Off by default.
