@@ -2,10 +2,13 @@
 ArchdudeWhatsNew:Register("PriceCheckReply", {
 	title = "PriceCheck Reply",
 	icon = "Interface\\Icons\\INV_Misc_Coin_02",
-	version = "1.2.1",
+	version = "1.2.2",
 	seen = "PriceCheckReplyWhatsNew",
 	saved = { "PriceCheckReplyDB" },
 	changes = {
+		{ "1.2.2",
+			"Fixed: after you opened PriceCheck Reply's options, the game's own options could show the error \"AddOn 'PriceCheckReply' tried to call the protected function 'IsUserOAuthed()'\".",
+		},
 		{ "1.2.1",
 			"Fixed an error when opening the options during combat (\"tried to call the protected function 'OpenSettingsPanel()'\"). The options now open as soon as the fight ends.",
 		},

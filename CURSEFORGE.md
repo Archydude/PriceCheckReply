@@ -72,11 +72,11 @@ In party and raid chat, a request gets **just one answer**, and who answers chan
 
 ## B. Upload File form
 
-**File:** `dist\PriceCheckReply-1.2.1.zip`
+**File:** `dist\PriceCheckReply-1.2.2.zip`
 
 **Display name**
 ```
-PriceCheck Reply 1.2.1
+PriceCheck Reply 1.2.2
 ```
 
 **Release type:** `Release`
@@ -85,6 +85,9 @@ PriceCheck Reply 1.2.1
 
 **Changelog** (paste only the newest part; paste older parts too if they never went up)
 ```markdown
+1.2.2
+- Fixed: after you opened PriceCheck Reply's options, the game's own options could show the error "AddOn 'PriceCheckReply' tried to call the protected function 'IsUserOAuthed()'".
+
 1.2.1
 - Fixed an error when opening the options during combat ("tried to call the protected function 'OpenSettingsPanel()'"). The options now open as soon as the fight ends.
 
