@@ -56,8 +56,17 @@ function ns.CreateOptions()
 		return s
 	end
 
+	-- Like Settings.CreateCheckbox / CreateDropdown, but on our own row templates (see
+	-- Options.xml). On Blizzard's templates, a row that drew one of our settings is later
+	-- reused for Blizzard's own, which then can't call protected functions: its Discord
+	-- dropdown and button get blocked (ADDON_ACTION_FORBIDDEN on IsUserOAuthed).
+	local function control(kind, s, options, tooltip)
+		layout:AddInitializer(Settings.CreateControlInitializer("PriceCheckReplySettings" .. kind .. "Template", s,
+			options, tooltip))
+	end
+
 	local function checkbox(key, name, tooltip)
-		Settings.CreateCheckbox(category, setting(key, VarType.Boolean, name), tooltip)
+		control("Checkbox", setting(key, VarType.Boolean, name), nil, tooltip)
 	end
 
 	local function dropdown(key, name, choices, tooltip)
@@ -66,7 +75,7 @@ function ns.CreateOptions()
 			for _, choice in ipairs(choices) do container:Add(choice[1], choice[2]) end
 			return container:GetData()
 		end
-		Settings.CreateDropdown(category, setting(key, VarType.String, name), getOptions, tooltip)
+		control("Dropdown", setting(key, VarType.String, name), getOptions, tooltip)
 	end
 
 	checkbox("enabled", "Answer price requests",
