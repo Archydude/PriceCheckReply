@@ -81,6 +81,9 @@ To keep chat tidy, the same answer isn't sent to the same place twice within a f
 - `/pricereply test [item link]` shows the answer you'd send, only to you. Shift-click an item to put its link in. Add `tsm` or `auc` to see what an asker picking that addon would get.
 - `/pricereply selftest` lets you try it alone: for 5 minutes, your own `?pc` and `?` requests get answered the way someone else's would. Ask in guild chat and you get the whisper a guild mate would get, and chat tells you where each answer went. If a chat is turned off in the options, it says that instead. `/pricereply selftest off` ends it early.
 
+## Made with AI
+This addon was made with AI.
+
 ## License
 
 MIT, see [LICENSE](LICENSE).

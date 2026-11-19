@@ -60,6 +60,8 @@ Whispers from friends, Battle.net friends and guild mates are answered from the 
 - Works on Retail, Mists of Pandaria Classic, TBC Anniversary, WoW Forever and Classic Era.
 - **/pricereply** opens the options. **/pricereply selftest** lets you try it alone.
 
+This addon was made with AI.
+
 **Feedback and bug reports are welcome** in the comments.
 ```
 ---
