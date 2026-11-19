@@ -58,8 +58,8 @@ end
 function ns.TakeTurns(chatType, text, answer)
 	local channel = ADDON_CHANNEL[chatType]
 	if not channel then return answer() end
-	-- Where the realm doesn't let addons write in this chat, it doesn't let the hidden messages
-	-- through either, so everyone answers (by whisper; see ns.CanAnswerIn).
+	-- Where the realm doesn't let addons write in this chat (guild and officer chat), it doesn't
+	-- let the hidden messages through either, so everyone answers, each by whisper.
 	if not ns.CanAnswerIn(chatType) then return answer() end
 
 	-- Written as a whole number, so every game writes the same key.

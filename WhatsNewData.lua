@@ -2,10 +2,16 @@
 ArchdudeWhatsNew:Register("PriceCheckReply", {
 	title = "PriceCheck Reply",
 	icon = "Interface\\Icons\\INV_Misc_Coin_02",
-	version = "1.2.2",
+	version = "1.3.0",
 	seen = "PriceCheckReplyWhatsNew",
 	saved = { "PriceCheckReplyDB" },
 	changes = {
+		{ "1.3.0",
+			"New option, Also say: a second TSM price next to the main one, like |cffffd100(TSM market, lowest 22s)|r, so the asker can tell whether today's price is above or below its usual value. For a stack it's the price of one; several items get both totals. Off by default.",
+			"Price names in answers are shorter: |cffffd100TSM market|r, |cffffd100TSM lowest|r and |cffffd100TSM region avg|r.",
+			"Guild chat and officer chat are now on/off options, Answer guild chat by whisper and Answer officer chat by whisper. The game doesn't let addons write in those chats, on Retail as well as WoW Forever, so those answers were already whispers; now the options say so. If you had either chat answered, it stays on.",
+			"New |cffffd100/pricereply selftest|r: for 5 minutes your own requests in chat get answered like anyone else's, so you can try it alone.",
+		},
 		{ "1.2.2",
 			"Fixed: after you opened PriceCheck Reply's options, the game's own options could show the error \"AddOn 'PriceCheckReply' tried to call the protected function 'IsUserOAuthed()'\".",
 		},

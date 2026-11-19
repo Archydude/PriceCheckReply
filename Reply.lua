@@ -5,12 +5,15 @@
 local _, ns = ...
 
 -- Chat events -> the setting that says whether and how to answer, and the channel to answer in.
--- Channel settings are "off", "channel" (answer in `reply`) or "whisper" (whisper the asker).
+-- Group chat settings are "off", "channel" (answer in `reply`) or "whisper" (whisper the asker).
+-- Guild and officer chat settings are on or off, and `whisper` says the answer always goes to the
+-- asker by whisper: the game doesn't let addons write in those chats (see ns.CanAnswerIn). `reply`
+-- is still the chat the players with the addon take turns in.
 local CHANNELS = {
 	CHAT_MSG_WHISPER = { reply = "WHISPER" },
 	CHAT_MSG_BN_WHISPER = { setting = "bnet", reply = "BN_WHISPER" },
-	CHAT_MSG_GUILD = { setting = "guildReply", reply = "GUILD" },
-	CHAT_MSG_OFFICER = { setting = "officerReply", reply = "OFFICER" },
+	CHAT_MSG_GUILD = { setting = "guildReply", reply = "GUILD", whisper = true },
+	CHAT_MSG_OFFICER = { setting = "officerReply", reply = "OFFICER", whisper = true },
 	CHAT_MSG_PARTY = { setting = "groupReply", reply = "PARTY" },
 	CHAT_MSG_PARTY_LEADER = { setting = "groupReply", reply = "PARTY" },
 	CHAT_MSG_RAID = { setting = "groupReply", reply = "RAID" },
@@ -28,6 +31,14 @@ local RATE_LINES, RATE_WINDOW = 8, 15
 -- Seconds between the lines of one answer. Lines sent in the same moment can reach the asker out
 -- of order (seen on WoW Forever), and the total has to come first.
 local LINE_GAP = 0.3
+
+-- How each place an answer can go is named in the self-test's messages.
+local PLACE_NAMES = {
+	WHISPER = "a whisper", BN_WHISPER = "a Battle.net whisper", GUILD = "guild chat", OFFICER = "officer chat",
+	PARTY = "party chat", RAID = "raid chat", INSTANCE_CHAT = "instance chat",
+}
+-- How long /pricereply selftest lets the player's own messages count as requests.
+local SELF_TEST_SECONDS = 300
 
 local SendChat = (C_ChatInfo and C_ChatInfo.SendChatMessage) or SendChatMessage
 local SendBNetWhisper = (C_BattleNet and C_BattleNet.SendWhisper) or BNSendWhisper
@@ -163,12 +174,28 @@ end
 -- Chat
 ---------------------------------------------------------------------------
 
+-- Until this time, the player's own messages count as requests, so they can try the addon alone.
+local selfTestUntil = 0
+
+local function selfTesting()
+	return GetTime() < selfTestUntil
+end
+
+function ns.SelfTest(on)
+	selfTestUntil = on and GetTime() + SELF_TEST_SECONDS or 0
+	if on then
+		ns.Print("self-test on for 5 minutes: your own ?pc messages get answered, the way someone else's would. "
+			.. "Type one in guild chat to try guild answers. /pricereply selftest off ends it.")
+	else
+		ns.Print("self-test off.")
+	end
+end
+
 local function onChat(event, ...)
 	local db = ns.db
 	if not db.enabled then return end
 	local channel = CHANNELS[event]
 	local how = channel.setting and db[channel.setting]
-	if how == false or how == "off" then return end
 
 	local text, sender = ...
 	local flags, guid, bnSenderID = select(6, ...), select(12, ...), select(13, ...)
@@ -176,22 +203,32 @@ local function onChat(event, ...)
 	if not (ns.Readable(text) and ns.Readable(sender) and ns.Readable(guid)) then return end
 	if type(text) ~= "string" or type(sender) ~= "string" then return end
 	if flags == "GM" or flags == "DEV" then return end
+	local fromMe = event ~= "CHAT_MSG_BN_WHISPER" and isMe(sender, guid)
+	-- A self-test answers the player's own requests, so say why one isn't answered.
+	local testing = fromMe and selfTesting() and hasTrigger(text)
+	if fromMe and not testing then return end
+
+	if how == false or how == "off" then
+		if testing then ns.Print("self-test: requests in " .. PLACE_NAMES[channel.reply] .. " are turned off in the options.") end
+		return
+	end
 
 	local replyType, target = channel.reply, nil
 	if event == "CHAT_MSG_BN_WHISPER" then
 		if not ns.Readable(bnSenderID) or not bnSenderID then return end
 		target = bnSenderID
-	else
-		if isMe(sender, guid) then return end
-		if event == "CHAT_MSG_WHISPER" then
-			if not wantsWhisperFrom(sender, guid) then return end
-			target = sender
-		elseif how == "whisper" or not ns.CanAnswerIn(channel.reply) then
-			replyType, target = "WHISPER", sender
-		end
+	elseif event == "CHAT_MSG_WHISPER" then
+		if not testing and not wantsWhisperFrom(sender, guid) then return end
+		target = sender
+	elseif channel.whisper or how == "whisper" then
+		replyType, target = "WHISPER", sender
 	end
 
 	if not hasTrigger(text) then return end
+	if testing then
+		ns.Print("self-test: a request in " .. PLACE_NAMES[channel.reply] .. ", answering by "
+			.. (replyType == "WHISPER" and "whispering you" or PLACE_NAMES[replyType]) .. ".")
+	end
 	if not ns.CanAnswer(text) then
 		if not warnedNoAddon then
 			warnedNoAddon = true

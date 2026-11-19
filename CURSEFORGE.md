@@ -32,37 +32,33 @@ Friends and guild mates type ?pc or ? with an item link and get your TSM or Auct
 When a guild mate asks what something sells for, PriceCheck Reply answers with your **TSM or Auctionator** price, so you don't have to look it up.
 
 They type `?pc [Linen Cloth]`, or just `?[Linen Cloth]`, and get this back:
-`[Linen Cloth]: 25s 30c (TSM market value)`
+`[Linen Cloth]: 25s 30c (TSM market)`
 
 ### Ask any way you like
 - **The short `?`:** a `?` right before the link asks, old-school style. `anyone have [Linen Cloth]?` doesn't count.
 - **Stacks:** `?pc 20 [Linen Cloth]` or `?20 [Linen Cloth]` prices 20 and one.
-- **Several items:** up to 6 in one message, each with its own amount. The answer starts with the **total**, then lists each item:
-  `Total: 3g 47s for 3 items (TSM market value)`
+- **Several items:** up to 6 in one message, each with its own amount. The answer starts with the **total**, then lists each item.
 - **Their choice of price:** `?pc tsm [item]` or `?pc auc [item]` picks the price addon.
 - **Battle pets** work too.
 
 ### Honest answers
 - **Items that can't be auctioned** say so: `binds when picked up, can't be auctioned`.
 - **No price yet?** It says so, plus what a vendor pays.
+- **Above or below value?** Optionally add a second TSM price: `(TSM market, lowest 22s)`.
 - **How fresh is it?** Auctionator prices say when they were updated: `updated 2h ago`.
-- **Does it sell?** Optionally add TSM's region sale rate and daily sales: `region sale rate 94%, region sells 2,847/day`.
+- **Does it sell?** Optionally add TSM's region sale rate and daily sales.
 
 ### You choose who gets answered
-Whispers from friends, Battle.net friends and guild mates are answered from the start. Turn on strangers, or guild, officer, party and raid chat, answered right there or by whisper.
-
-### When several of you have it
-In party and raid chat, a request gets **just one answer**, and who answers changes from request to request. Guild and officer chat work the same where the realm lets addons write there. WoW Forever's realms don't for now, so there each of you whispers the asker.
+Whispers from friends, Battle.net friends and guild mates are answered from the start. Turn on strangers, or requests made in guild, officer, party and raid chat. In party and raid chat, a request gets **just one answer** when several of you have the addon. Guild and officer requests are answered by whisper, since the game doesn't let addons write there.
 
 ### Polite by design
-- It never answers your own messages or Game Masters.
-- No repeats within a few seconds, and a flood of requests won't get you muted for spam.
+- It never answers Game Masters, and won't repeat itself or get you muted for spam.
 - On Retail it stays quiet in dungeons, raids and battlegrounds, where the game hides chat from addons.
 
 ### Good to know
 - Needs **TradeSkillMaster** or **Auctionator** with prices for your realm.
 - Works on Retail, Mists of Pandaria Classic, TBC Anniversary, WoW Forever and Classic Era.
-- **/pricereply** opens the options. **/pricereply test [item]** shows the answer you'd send, only to you.
+- **/pricereply** opens the options. **/pricereply selftest** lets you try it alone.
 
 **Feedback and bug reports are welcome** in the comments.
 ```
@@ -72,11 +68,11 @@ In party and raid chat, a request gets **just one answer**, and who answers chan
 
 ## B. Upload File form
 
-**File:** `dist\PriceCheckReply-1.2.2.zip`
+**File:** `dist\PriceCheckReply-1.3.0.zip`
 
 **Display name**
 ```
-PriceCheck Reply 1.2.2
+PriceCheck Reply 1.3.0
 ```
 
 **Release type:** `Release`
@@ -85,6 +81,12 @@ PriceCheck Reply 1.2.2
 
 **Changelog** (paste only the newest part; paste older parts too if they never went up)
 ```markdown
+1.3.0
+- New option, Also say: a second TSM price next to the main one, like `(TSM market, lowest 22s)`, so the asker can tell whether today's price is above or below its usual value. For a stack it's the price of one; several items get both totals. Off by default.
+- Price names in answers are shorter: `TSM market`, `TSM lowest` and `TSM region avg`.
+- Guild chat and officer chat are now on/off options, Answer guild chat by whisper and Answer officer chat by whisper. The game doesn't let addons write in those chats, on Retail as well as WoW Forever, so those answers were already whispers; now the options say so. If you had either chat answered, it stays on.
+- New `/pricereply selftest`: for 5 minutes your own requests in chat get answered like anyone else's, so you can try it alone.
+
 1.2.2
 - Fixed: after you opened PriceCheck Reply's options, the game's own options could show the error "AddOn 'PriceCheckReply' tried to call the protected function 'IsUserOAuthed()'".
 

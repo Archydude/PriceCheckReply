@@ -4,7 +4,7 @@ Answers price questions for you. When a friend or guild mate whispers you `?pc` 
 
 ```
 Friend whispers: ?pc [Linen Cloth]
-To Friend: [Linen Cloth]: 25s 30c (TSM market value)
+To Friend: [Linen Cloth]: 25s 30c (TSM market)
 ```
 
 Works on Retail, MoP Classic, TBC Anniversary, WoW Forever and Classic Era.
@@ -16,11 +16,11 @@ Works on Retail, MoP Classic, TBC Anniversary, WoW Forever and Classic Era.
 ## Asking
 
 - **One item:** `?pc [Linen Cloth]`, or the old-school way, `?[Linen Cloth]`
-- **A stack:** `?pc 20 [Linen Cloth]`, `?pc 20x [Linen Cloth]`, `?pc [Linen Cloth] x20` or `?pc [Linen Cloth] 20`, and the same with `?`: `?20 [Linen Cloth]`, `?x20 [Linen Cloth]`, `20 ?[Linen Cloth]`, `?[Linen Cloth] x20`. A number after the link without an x only counts at the end of the message. The answer gives the price of 20 and of one: `20x [Linen Cloth]: 5g 6s (25s 30c each, TSM market value)`
+- **A stack:** `?pc 20 [Linen Cloth]`, `?pc 20x [Linen Cloth]`, `?pc [Linen Cloth] x20` or `?pc [Linen Cloth] 20`, and the same with `?`: `?20 [Linen Cloth]`, `?x20 [Linen Cloth]`, `20 ?[Linen Cloth]`, `?[Linen Cloth] x20`. A number after the link without an x only counts at the end of the message. The answer gives the price of 20 and of one: `20x [Linen Cloth]: 5g 6s (25s 30c each, TSM market)`
 - **Several items:** `?pc [Linen Cloth] [Wool Cloth]`, up to 6 at once. The answer starts with the total, then lists the items:
 
   ```
-  Total: 3g 47s for 3 items (TSM market value)
+  Total: 3g 47s for 3 items (TSM market)
   200x [Handful of Copper Bolts] 1g 96s; 100x [Copper Bar] 97s; 200x [Linen Cloth] 54s
   ```
 
@@ -45,17 +45,16 @@ Whispers are always answered with a whisper:
 | Whispers from anyone | Off | Strangers too |
 | Battle.net whispers | On | Answered by Battle.net whisper |
 
-For requests in a chat channel, you choose for each one: **Don't answer** (the default), **Answer in the same chat** so everyone there sees the price, or **Whisper the asker** to keep it between the two of you.
+Requests in guild and officer chat are answered by whispering the asker, because the game doesn't let addons write in those chats. Both are off until you turn them on:
 
-Some realms don't let addons write in guild or officer chat. WoW Forever's realms are like that right now. There, guild and officer requests are always answered by whisper, and since the players with the addon can't tell each other who answers, the asker gets a whisper from each of them. Party and raid chat aren't affected. If the realm allows it again, answers go back to how you set them.
+| Option | Default | |
+|---|---|---|
+| Answer guild chat by whisper | Off | Requests made in guild chat |
+| Answer officer chat by whisper | Off | Requests made in officer chat |
 
-| Option | Covers |
-|---|---|
-| Guild chat | Guild chat |
-| Officer chat | Officer chat |
-| Party and raid chat | Party, raid and instance chat |
+For requests in party, raid and instance chat, you choose with **Party and raid chat**: **Don't answer** (the default), **Answer in the same chat** so everyone there sees the price, or **Whisper the asker** to keep it between the two of you.
 
-**When several of you have PriceCheck Reply**, a request in party or raid chat still gets just one answer, and so does one in guild or officer chat where the realm lets addons write there (not on WoW Forever, see above). It comes about a second later, instead of one from everyone. Who answers changes from request to request. Someone who has that chat set to Don't answer is left out, so one of the others answers. Whispers are answered right away, since only you got them.
+**When several of you have PriceCheck Reply**, a request in party or raid chat still gets just one answer. It comes about a second later, instead of one from everyone. Who answers changes from request to request. Someone who has that chat set to Don't answer is left out, so one of the others answers. In guild and officer chat the players with the addon can't tell each other who answers, so the asker gets a whisper from each of them. Whispers are answered right away, since only you got them.
 
 On Retail, inside dungeons, raids, Mythic+ and battlegrounds the game doesn't let addons read chat or send it during fights, so nothing gets answered there.
 
@@ -66,7 +65,8 @@ To keep chat tidy, the same answer isn't sent to the same place twice within a f
 - **Price addon:** Automatic (TSM, and Auctionator for items TSM has no price for), TSM only, or Auctionator only. Askers who add `tsm` or `auc` to their request get that addon instead.
 - **Askers can pick the price addon:** on by default.
 - **TSM price:** market value (default), lowest auction right now, historical price, or region market average.
-- **Say where prices come from:** adds `(TSM market value)` or `(Auctionator)` to each answer.
+- **Also say:** a second TSM price added to each answer, so the asker can tell whether today's price is above or below the usual one. None by default; pick any of the four above. With market value as the main price and lowest auction here: `[Linen Cloth]: 25s 30c (TSM market, lowest 22s)`. For a stack it's the price of one, beside the price of one by the main price: `20x [Linen Cloth]: 5g 6s (25s 30c each, TSM market, lowest 22s each)`. In an answer about several items, the total line has both totals, `Total: 3g 47s for 3 items (TSM market, lowest 3g 10s)`, and each item gets a short one, `100x [Copper Bar] 97s (low 85s)`. Only answers with a TSM price get it, and items TSM has no second price for go without.
+- **Say where prices come from:** adds `(TSM market)` or `(Auctionator)` to each answer.
 - **Say how old prices are:** adds when Auctionator last saw the item: `updated 2h ago` for an item seen in today's scan, `updated today` when Auctionator can't say more, then `updated yesterday` or `updated 5 days ago`. TSM doesn't tell other addons how old its prices are, so TSM answers don't get one. On by default.
 - **Say the region sale rate:** adds how many of the item's auctions sell across your region, from TSM: `region sale rate 12%`. Off by default.
 - **Say how many sell per day:** adds how many of the item sell each day across your region, from TSM: `region sells 34/day`. Off by default.
@@ -79,6 +79,7 @@ To keep chat tidy, the same answer isn't sent to the same place twice within a f
 - `/pricereply` opens the options (also Esc > Options > AddOns > PriceCheck Reply). `/pcreply` works too.
 - `/pricereply on` and `/pricereply off` turn answering on and off.
 - `/pricereply test [item link]` shows the answer you'd send, only to you. Shift-click an item to put its link in. Add `tsm` or `auc` to see what an asker picking that addon would get.
+- `/pricereply selftest` lets you try it alone: for 5 minutes, your own `?pc` and `?` requests get answered the way someone else's would. Ask in guild chat and you get the whisper a guild mate would get, and chat tells you where each answer went. If a chat is turned off in the options, it says that instead. `/pricereply selftest off` ends it early.
 
 ## License
 

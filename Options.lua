@@ -91,22 +91,23 @@ function ns.CreateOptions()
 	checkbox("bnet", "Battle.net whispers", "Answer Battle.net whispers from your Battle.net friends.")
 
 	header("Channels")
-	local function channel(key, name, chat, tooltip)
-		dropdown(key, name, {
-			{ "off", "Don't answer" },
-			{ "channel", "Answer in " .. chat },
-			{ "whisper", "Whisper the asker" },
-		}, tooltip .. " Answering in " .. chat .. " lets everyone there see the price; a whisper keeps it between you and the asker."
-			.. " When others there have PriceCheck Reply too, only one of you answers each request.")
+	-- The game doesn't let addons write in guild or officer chat (see ns.CanAnswerIn), so those
+	-- answers are whispers.
+	local function whisperOnly(key, name, chat)
+		checkbox(key, name, "Answer requests made in " .. chat .. " by whispering the asker."
+			.. " The game doesn't let addons write in " .. chat .. ", so the answer can't go there."
+			.. " When others there have PriceCheck Reply too, the asker gets a whisper from each of you.")
 	end
-	-- Guild and officer chat are the ones some realms close to addons (see ns.CanAnswerIn).
-	local guildNote = " Some realms, such as WoW Forever's, don't let addons write in guild or officer chat;"
-		.. " there the asker always gets a whisper, one from each player with the addon."
-	channel("guildReply", "Guild chat", "guild chat", "Whether to answer requests made in guild chat, and how." .. guildNote)
-	channel("officerReply", "Officer chat", "officer chat", "Whether to answer requests made in officer chat, and how." .. guildNote)
-	channel("groupReply", "Party and raid chat", "the same chat",
-		"Whether to answer requests made in party, raid and instance chat, and how."
-			.. (issecretvalue and " Inside dungeons, raids and battlegrounds the game doesn't let addons read chat, so no answers there." or ""))
+	whisperOnly("guildReply", "Answer guild chat by whisper", "guild chat")
+	whisperOnly("officerReply", "Answer officer chat by whisper", "officer chat")
+	dropdown("groupReply", "Party and raid chat", {
+		{ "off", "Don't answer" },
+		{ "channel", "Answer in the same chat" },
+		{ "whisper", "Whisper the asker" },
+	}, "Whether to answer requests made in party, raid and instance chat, and how."
+		.. (issecretvalue and " Inside dungeons, raids and battlegrounds the game doesn't let addons read chat, so no answers there." or "")
+		.. " Answering in the same chat lets everyone there see the price; a whisper keeps it between you and the asker."
+		.. " When others there have PriceCheck Reply too, only one of you answers each request.")
 
 	header("Prices")
 	dropdown("provider", "Price addon", {
@@ -121,8 +122,15 @@ function ns.CreateOptions()
 	for _, source in ipairs(ns.TSM_SOURCES) do tsmChoices[#tsmChoices + 1] = { source[1], source[2] } end
 	dropdown("tsmSource", "TSM price", tsmChoices,
 		"Which TSM price to answer with. Market value smooths out spikes; lowest auction is what's listed right now.")
+	local secondChoices = { { "none", "None" } }
+	for _, source in ipairs(ns.TSM_SOURCES) do
+		secondChoices[#secondChoices + 1] = { source[1], (source[2]:gsub(" %(recommended%)$", "")) }
+	end
+	dropdown("tsmSecond", "Also say", secondChoices,
+		"A second TSM price to add to each answer, like \"(TSM market, lowest 22s)\", so the asker can tell whether today's price is above or below its usual value. "
+			.. "Only answers with a TSM price get it. Choosing the same price as TSM price adds nothing.")
 	checkbox("showSource", "Say where prices come from",
-		"Add the price addon to each answer, like \"(TSM market value)\".")
+		"Add the price addon to each answer, like \"(TSM market)\".")
 	checkbox("showAge", "Say how old prices are",
 		"Add when Auctionator last saw each item, like \"updated 2h ago\" or \"updated 3 days ago\". TSM doesn't tell other addons how old its prices are, so TSM answers don't get one.")
 	checkbox("showSaleRate", "Say the region sale rate",

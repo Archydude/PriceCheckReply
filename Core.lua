@@ -58,13 +58,15 @@ end
 ns.TRIGGER = "?pc"
 
 -- Chats an addon can't write in when the realm restricts outgoing addon chat. Blizzard sets the
--- restriction per realm; WoW Forever realms have it (seen on 1.60.1, November 2026), and there the
--- game blocks addons from guild chat (and officer chat, which goes to the same place) but lets
--- party chat and whispers through.
+-- restriction per realm; Retail (12.1.5) and WoW Forever (1.60.1) realms have it, both tested in
+-- game in November 2026, and there the game blocks addons from guild chat (and officer chat, which
+-- goes to the same place) but lets party chat and whispers through. So requests in these chats are
+-- always answered by whisper (see Reply.lua).
 local RESTRICTED_CHATS = { GUILD = true, OFFICER = true }
 
--- Whether an answer can go into `chatType` chat on this realm. Where it can't, the asker gets a
--- whisper instead.
+-- Whether addons can write in `chatType` chat on this realm. Where they can't, their hidden
+-- messages don't get through either, so the players with the addon can't agree on one answerer
+-- (see Turns.lua).
 function ns.CanAnswerIn(chatType)
 	if not RESTRICTED_CHATS[chatType] then return true end
 	local restricted = C_ChatInfo and C_ChatInfo.AreOutgoingAddonChatMessagesRestricted
@@ -80,20 +82,26 @@ ns.DEFAULTS = {
 	whisperGuild = true,     -- guild mates
 	whisperAnyone = false,   -- everyone else
 	bnet = true,             -- Battle.net whispers
-	-- Channels: "off" | "channel" (answer in the same channel) | "whisper" (whisper the asker).
-	guildReply = "off",
-	officerReply = "off",
-	groupReply = "off",      -- party, raid and instance chat
+	-- Guild and officer chat requests: answered or not, always by whisper.
+	guildReply = false,
+	officerReply = false,
+	-- Party, raid and instance chat: "off" | "channel" (answer in the same chat) | "whisper"
+	-- (whisper the asker).
+	groupReply = "off",
 	-- Prices.
 	provider = "auto",       -- "auto" | "tsm" | "auctionator"
 	askerPicks = true,       -- "tsm" or "auc" in a request picks the price addon
 	tsmSource = "dbmarket",
+	tsmSecond = "none",      -- a second TSM price to say next to the main one, or "none"
 	showSource = true,       -- say where each price comes from
 	showAge = true,          -- say how old an Auctionator price is
 	showSaleRate = false,    -- say TSM's region sale rate
 	showSoldPerDay = false,  -- say how many TSM says sell per day in the region
 	vendorPrice = true,      -- mention the vendor price when there's no auction price
 }
+
+-- Settings that were a three-way choice in older versions and are on or off now.
+local WAS_A_CHOICE = { "guildReply", "officerReply" }
 
 ---------------------------------------------------------------------------
 -- Loading
@@ -105,6 +113,12 @@ events:SetScript("OnEvent", function(self, _, name)
 	if name ~= ADDON_NAME then return end
 	self:UnregisterEvent("ADDON_LOADED")
 	PriceCheckReplyDB = PriceCheckReplyDB or {}
+	-- Guild and officer chat were choices ("off", "channel", "whisper") through 1.2.2. Now each is
+	-- on or off; whoever had either way of answering chosen keeps answering.
+	for _, key in ipairs(WAS_A_CHOICE) do
+		local was = PriceCheckReplyDB[key]
+		if type(was) == "string" then PriceCheckReplyDB[key] = was ~= "off" end
+	end
 	for key, value in pairs(ns.DEFAULTS) do
 		if PriceCheckReplyDB[key] == nil then PriceCheckReplyDB[key] = value end
 	end
@@ -126,6 +140,7 @@ local function help()
 	print("  /pricereply - options")
 	print("  /pricereply on | off - answer price requests or not")
 	print("  /pricereply test <item link> - show the answer you'd send, only to you (add tsm or auc to pick the price addon)")
+	print("  /pricereply selftest - for 5 minutes, your own ?pc messages in chat get answered, so you can try it alone")
 end
 
 SLASH_PRICECHECKREPLY1 = "/pricereply"
@@ -139,6 +154,8 @@ SlashCmdList.PRICECHECKREPLY = function(msg)
 	elseif command == "on" or command == "off" then
 		ns.SetSetting("enabled", command == "on")
 		ns.Print(command == "on" and "answering price requests." or "not answering price requests.")
+	elseif command == "selftest" then
+		ns.SelfTest(rest:lower() ~= "off")
 	elseif command == "test" then
 		ns.WhenLoaded(rest, function()
 			local lines = ns.BuildReply(rest)

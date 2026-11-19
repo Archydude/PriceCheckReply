@@ -10,16 +10,19 @@ local MAX_MESSAGES = 3   -- chat lines sent for one request
 local MAX_BYTES = 255    -- the game's limit for one chat line, link codes included
 local MAX_COUNT = 1000000
 
--- How each TSM price reads in a reply.
+-- Each TSM price: its name in the options, how it's named as the main price, as the second price
+-- of one item, and as the second price of an item in a list.
 ns.TSM_SOURCES = {
-	{ "dbmarket", "Market value (recommended)", "TSM market value" },
-	{ "dbminbuyout", "Lowest auction right now", "TSM lowest auction" },
-	{ "dbhistorical", "Historical price", "TSM historical" },
-	{ "dbregionmarketavg", "Region market average", "TSM region average" },
+	{ "dbmarket", "Market value (recommended)", "TSM market", "market", "mkt" },
+	{ "dbminbuyout", "Lowest auction right now", "TSM lowest", "lowest", "low" },
+	{ "dbhistorical", "Historical price", "TSM historical", "historical", "hist" },
+	{ "dbregionmarketavg", "Region market average", "TSM region avg", "region avg", "reg avg" },
 }
 
-local TSM_LABELS = {}
-for _, source in ipairs(ns.TSM_SOURCES) do TSM_LABELS[source[1]] = source[3] end
+local TSM_LABELS, SECOND_NAMES, SECOND_SHORT = {}, {}, {}
+for _, source in ipairs(ns.TSM_SOURCES) do
+	TSM_LABELS[source[1]], SECOND_NAMES[source[1]], SECOND_SHORT[source[1]] = source[3], source[4], source[5]
+end
 
 ---------------------------------------------------------------------------
 -- Price addons
@@ -73,12 +76,23 @@ local function positive(ok, value)
 	if ok and type(value) == "number" and value > 0 then return value end
 end
 
-local function tsmPrice(link)
+-- One item's price from TSM's `source`, or nil.
+local function tsmValue(link, source)
 	local ok, itemString = pcall(TSM_API.ToItemString, link)
 	if not ok or not itemString then return end
+	return positive(pcall(TSM_API.GetCustomPriceValue, source, itemString))
+end
+
+local function tsmPrice(link)
 	local source = ns.db.tsmSource
-	local value = positive(pcall(TSM_API.GetCustomPriceValue, source, itemString))
+	local value = tsmValue(link, source)
 	if value then return value, TSM_LABELS[source] or ("TSM " .. source) end
+end
+
+-- The TSM price to say next to the main one, or nil when that's off or the same price.
+local function secondSource()
+	local source = ns.db.tsmSecond
+	if source and source ~= "none" and source ~= ns.db.tsmSource and SECOND_NAMES[source] then return source end
 end
 
 local function auctionatorPrice(link, kind)
@@ -96,12 +110,12 @@ local function auctionatorPrice(link, kind)
 	return value, "Auctionator", ns.AuctionatorAge(link)
 end
 
--- One item's auction price, where it came from, and how old it is (Auctionator only), or nil.
--- `addon` as in useTSM.
+-- One item's auction price, where it came from, how old it is (Auctionator only), and whether it
+-- came from TSM, or nil. `addon` as in useTSM.
 local function auctionPrice(link, kind, addon)
 	if useTSM(addon) then
 		local value, label = tsmPrice(link)
-		if value then return value, label end
+		if value then return value, label, nil, true end
 	end
 	if useAuctionator(addon) then return auctionatorPrice(link, kind) end
 end
@@ -315,14 +329,33 @@ local function lookUp(item, request)
 	info.vendorText = vendor and (", sells to a vendor for " .. ns.Coins(vendor * item.count)) or ""
 	info.bound = details and CANT_AUCTION[details.bindType]
 	if info.bound then return info end
-	local each, label, age = auctionPrice(item.link, item.kind, request.addon)
+	local each, label, age, fromTSM = auctionPrice(item.link, item.kind, request.addon)
 	if each then
 		info.each, info.value = each, each * item.count
 		if label and (ns.db.showSource or request.addon or request.missing) then info.label = label end
 		if age and ns.db.showAge then info.age = age end
 		info.saleRate, info.perDay = regionStats(item.link)
+		-- The second TSM price goes only with a TSM price, so both come from the same addon.
+		local second = fromTSM and secondSource()
+		local secondEach = second and tsmValue(item.link, second)
+		if secondEach then
+			info.second, info.secondEach, info.secondValue = second, secondEach, secondEach * item.count
+		end
 	end
 	return info
+end
+
+-- In a one-item answer, the second price for one item, so it sits beside the "each" price:
+-- "lowest 22s", or "lowest 22s each" for a stack. In a list, for the whole count like the main
+-- price: "low 4g 40s".
+local function secondNote(info, notes, short)
+	if not info.secondValue then return end
+	if short then
+		notes[#notes + 1] = SECOND_SHORT[info.second] .. " " .. ns.Coins(info.secondValue)
+	else
+		notes[#notes + 1] = SECOND_NAMES[info.second] .. " " .. ns.Coins(info.secondEach)
+			.. (info.item.count > 1 and " each" or "")
+	end
 end
 
 -- "20x [Linen Cloth]", or just the item for one. `shown` is its link, or its plain name when the
@@ -344,7 +377,8 @@ local function withNotes(text, notes)
 	return text .. " (" .. table.concat(notes, ", ") .. ")"
 end
 
--- The answer about a single item: "20x [Linen Cloth]: 5g 6s (25s 30c each, TSM market value)".
+-- The answer about a single item: "20x [Linen Cloth]: 5g 6s (25s 30c each, TSM market, lowest
+-- 22s each)".
 -- request.missing is the addon the asker picked that isn't installed.
 local function single(info, shown, request)
 	local what = named(info, shown)
@@ -352,6 +386,7 @@ local function single(info, shown, request)
 	local notes = {}
 	if info.item.count > 1 then notes[#notes + 1] = ns.Coins(info.each) .. " each" end
 	if info.label then notes[#notes + 1] = info.label end
+	secondNote(info, notes, false)
 	if info.age then notes[#notes + 1] = info.age end
 	regionNotes(info, notes, false)
 	if request.missing then notes[#notes + 1] = "no " .. ADDON_NAMES[request.missing] .. " here" end
@@ -365,6 +400,7 @@ local function listed(info, shown, request, shared)
 	if not info.value then return unpriced(info, what, request) end
 	local notes = {}
 	if info.label and info.label ~= shared.label then notes[#notes + 1] = info.label end
+	secondNote(info, notes, true)
 	if info.age and info.age ~= shared.age then notes[#notes + 1] = info.age end
 	regionNotes(info, notes, true)
 	return withNotes(what .. " " .. ns.Coins(info.value), notes)
@@ -384,18 +420,26 @@ local function sharedValue(infos, key)
 	return value
 end
 
--- "Total: 3g 47s for 3 items (TSM market value)". Items without a price aren't in it, and then
--- it says so: "for 2 of 3 items". Nil when no item has a price.
+-- "Total: 3g 47s for 3 items (TSM market, lowest 3g 10s)". Items without a price aren't in it,
+-- and then it says so: "for 2 of 3 items". The second total adds up the items that have a second
+-- price, and says so when that's fewer: "lowest 3g 10s for 2 items". Nil when no item has a price.
 local function totalLine(infos, request, shared)
-	local sum, priced = 0, 0
+	local sum, priced, secondSum, secondPriced, second = 0, 0, 0, 0, nil
 	for _, info in ipairs(infos) do
 		if info.value then sum, priced = sum + info.value, priced + 1 end
+		if info.secondValue then
+			secondSum, secondPriced, second = secondSum + info.secondValue, secondPriced + 1, info.second
+		end
 	end
 	if priced == 0 then return end
 	local text = "Total: " .. ns.Coins(sum)
 		.. (priced < #infos and format(" for %d of %d items", priced, #infos) or format(" for %d items", #infos))
 	local notes = {}
 	if shared.label then notes[#notes + 1] = shared.label end
+	if second then
+		notes[#notes + 1] = SECOND_NAMES[second] .. " " .. ns.Coins(secondSum)
+			.. (secondPriced < priced and format(" for %d item%s", secondPriced, secondPriced == 1 and "" or "s") or "")
+	end
 	if shared.age then notes[#notes + 1] = shared.age end
 	if request.missing then notes[#notes + 1] = "no " .. ADDON_NAMES[request.missing] .. " here" end
 	return withNotes(text, notes)
