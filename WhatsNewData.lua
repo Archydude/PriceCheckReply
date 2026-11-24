@@ -2,10 +2,15 @@
 ArchdudeWhatsNew:Register("PriceCheckReply", {
 	title = "PriceCheck Reply",
 	icon = "Interface\\Icons\\INV_Misc_Coin_02",
-	version = "1.3.0",
+	version = "1.4.0",
 	seen = "PriceCheckReplyWhatsNew",
 	saved = { "PriceCheckReplyDB" },
 	changes = {
+		{ "1.4.0",
+			"|cffffd100Craftonomics prices:|r PriceCheck Reply can now answer with prices from |cffffd100Craftonomics|r (as a fallback in Automatic mode, as |cffffd100Craftonomics only|r, or when someone asks with |cffffd100?pc craft [item]|r).",
+			"|cffffd100Net after AH cut:|r asking with |cffffd100?pc net [item]|r deducts the 5% auction house cut and notes |cffffd100(after 5% cut)|r on single items and multi-item totals.",
+			"Fixed: a bare |cffffd100?pc|r with no item link is ignored, your own messages are recognized reliably on WoW Forever, Auctionator price ages still show when looked up by item ID, and multi-line replies stop cleanly if chat becomes restricted mid-reply.",
+		},
 		{ "1.3.0",
 			"New option, Also say: a second TSM price next to the main one, like |cffffd100(TSM market, lowest 22s)|r, so the asker can tell whether today's price is above or below its usual value. For a stack it's the price of one; several items get both totals. Off by default.",
 			"Price names in answers are shorter: |cffffd100TSM market|r, |cffffd100TSM lowest|r and |cffffd100TSM region avg|r.",

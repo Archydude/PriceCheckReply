@@ -5,6 +5,7 @@ local ADDON_NAME, ns = ...
 local floor, format = math.floor, string.format
 
 local PRICED_LINKS = { item = true, battlepet = true }
+local AH_CUT = 0.05
 local MAX_ITEMS = 6      -- items answered in one request
 local MAX_MESSAGES = 3   -- chat lines sent for one request
 local MAX_BYTES = 255    -- the game's limit for one chat line, link codes included
@@ -36,40 +37,67 @@ local function auctionatorAPI()
 	return Auctionator and Auctionator.API and Auctionator.API.v1
 end
 
--- `addon` is the price addon a request asked for ("tsm" | "auctionator"), or nil for the setting.
+local function craftonomicsAPI()
+	local api = CraftonomicsAPI
+	return type(api) == "table" and type(api.GetAuctionPrice) == "function" and api or nil
+end
+
+-- `addon` is the price addon a request asked for ("tsm" | "auctionator" | "craftonomics"), or nil for the setting.
 local function useTSM(addon)
-	return (addon or ns.db.provider) ~= "auctionator" and tsmLoaded()
+	local p = addon or ns.db.provider
+	return (p == "auto" or p == "tsm") and tsmLoaded()
 end
 
 local function useAuctionator(addon)
-	return (addon or ns.db.provider) ~= "tsm" and auctionatorAPI() ~= nil
+	local p = addon or ns.db.provider
+	return (p == "auto" or p == "auctionator") and auctionatorAPI() ~= nil
 end
 
-local LOADED = { tsm = tsmLoaded, auctionator = function() return auctionatorAPI() ~= nil end }
-local ADDON_NAMES = { tsm = "TSM", auctionator = "Auctionator" }
+local function useCraftonomics(addon)
+	local p = addon or ns.db.provider
+	return (p == "auto" or p == "craftonomics") and craftonomicsAPI() ~= nil
+end
 
--- Words an asker can add to a request to pick the price addon.
-local ASK_WORDS = { tsm = "tsm", auc = "auctionator", auctionator = "auctionator" }
+local LOADED = {
+	tsm = tsmLoaded,
+	auctionator = function() return auctionatorAPI() ~= nil end,
+	craftonomics = function() return craftonomicsAPI() ~= nil end,
+}
+local ADDON_NAMES = { tsm = "TSM", auctionator = "Auctionator", craftonomics = "Craftonomics" }
+
+-- Words an asker can add to a request to pick the price addon, checked in fixed order.
+local ASK_WORD_ORDER = {
+	{ "tsm", "tsm" },
+	{ "auc", "auctionator" },
+	{ "auctionator", "auctionator" },
+	{ "craft", "craftonomics" },
+	{ "craftonomics", "craftonomics" },
+}
 
 -- The price addon a request asks for, or nil.
 local function askedAddon(text)
 	if not ns.db.askerPicks then return end
 	local words = ns.Words(text)
-	for word, addon in pairs(ASK_WORDS) do
-		if ns.HasWord(words, word) then return addon end
+	for _, pair in ipairs(ASK_WORD_ORDER) do
+		if ns.HasWord(words, pair[1]) then return pair[2] end
 	end
+end
+
+local function askedNet(text)
+	return ns.HasWord(ns.Words(text), "net")
 end
 
 -- Whether the chosen price addon is loaded, so there's something to answer with.
 function ns.HasPriceAddon()
-	return useTSM() or useAuctionator()
+	return useTSM() or useAuctionator() or useCraftonomics()
 end
 
 -- What the options page and the "can't answer" message say is missing.
 function ns.MissingPriceAddon()
 	if ns.db.provider == "tsm" then return "TSM is not loaded" end
 	if ns.db.provider == "auctionator" then return "Auctionator is not loaded" end
-	return "neither TSM nor Auctionator is loaded"
+	if ns.db.provider == "craftonomics" then return "Craftonomics is not loaded" end
+	return "none of TSM, Auctionator or Craftonomics are loaded"
 end
 
 local function positive(ok, value)
@@ -111,6 +139,13 @@ local function auctionatorPrice(link, kind)
 	return value, "Auctionator", ns.AuctionatorAge(link, id)
 end
 
+local function craftonomicsPrice(link)
+	local api = craftonomicsAPI()
+	if not api then return end
+	local value = positive(pcall(api.GetAuctionPrice, link))
+	if value then return value, "Craftonomics" end
+end
+
 -- One item's auction price, where it came from, how old it is (Auctionator only), and whether it
 -- came from TSM, or nil. `addon` as in useTSM.
 local function auctionPrice(link, kind, addon)
@@ -118,7 +153,11 @@ local function auctionPrice(link, kind, addon)
 		local value, label = tsmPrice(link)
 		if value then return value, label, nil, true end
 	end
-	if useAuctionator(addon) then return auctionatorPrice(link, kind) end
+	if useAuctionator(addon) then
+		local value, label, age = auctionatorPrice(link, kind)
+		if value then return value, label, age end
+	end
+	if useCraftonomics(addon) then return craftonomicsPrice(link) end
 end
 
 ---------------------------------------------------------------------------
@@ -338,6 +377,7 @@ local function lookUp(item, request)
 	if info.bound then return info end
 	local each, label, age, fromTSM = auctionPrice(item.link, item.kind, request.addon)
 	if each then
+		if request.net then each = floor(each * (1 - AH_CUT) + 0.5) end
 		info.each, info.value = each, each * item.count
 		if label and (ns.db.showSource or request.addon or request.missing) then info.label = label end
 		if age and ns.db.showAge then info.age = age end
@@ -346,6 +386,7 @@ local function lookUp(item, request)
 		local second = fromTSM and secondSource()
 		local secondEach = second and tsmValue(item.link, second)
 		if secondEach then
+			if request.net then secondEach = floor(secondEach * (1 - AH_CUT) + 0.5) end
 			info.second, info.secondEach, info.secondValue = second, secondEach, secondEach * item.count
 		end
 	end
@@ -391,6 +432,7 @@ local function single(info, shown, request)
 	local what = named(info, shown)
 	if not info.value then return unpriced(info, what, request) end
 	local notes = {}
+	if request.net then notes[#notes + 1] = "after 5% cut" end
 	if info.item.count > 1 then notes[#notes + 1] = ns.Coins(info.each) .. " each" end
 	if info.label then notes[#notes + 1] = info.label end
 	secondNote(info, notes, false)
@@ -442,6 +484,7 @@ local function totalLine(infos, request, shared)
 	local text = "Total: " .. ns.Coins(sum)
 		.. (priced < #infos and format(" for %d of %d items", priced, #infos) or format(" for %d items", #infos))
 	local notes = {}
+	if request.net then notes[#notes + 1] = "after 5% cut" end
 	if shared.label then notes[#notes + 1] = shared.label end
 	if second then
 		notes[#notes + 1] = SECOND_NAMES[second] .. " " .. ns.Coins(secondSum)
@@ -466,7 +509,7 @@ end
 function ns.BuildReply(text)
 	local items = ns.ReadItems(text)
 	if #items == 0 then return end
-	local request = { addon = askedAddon(text) }
+	local request = { addon = askedAddon(text), net = askedNet(text) }
 	if request.addon and not LOADED[request.addon]() then
 		request.missing, request.addon = request.addon, nil
 	end

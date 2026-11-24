@@ -13,7 +13,7 @@ PriceCheck Reply
 
 **Summary**
 ```
-Friends and guild mates type ?pc or ? with an item link and get your TSM or Auctionator price back, with a total when they ask about several items.
+Friends and guild mates type ?pc or ? with an item link and get your TSM, Auctionator or Craftonomics price back, with a total when they ask about several items.
 ```
 
 **Main category:** `Auction & Economy`
@@ -29,7 +29,7 @@ Friends and guild mates type ?pc or ? with an item link and get your TSM or Auct
 ```markdown
 ## Price checks, answered for you
 
-When a guild mate asks what something sells for, PriceCheck Reply answers with your **TSM or Auctionator** price, so you don't have to look it up.
+When a guild mate asks what something sells for, PriceCheck Reply answers with your **TSM, Auctionator or Craftonomics** price, so you don't have to look it up.
 
 They type `?pc [Linen Cloth]`, or just `?[Linen Cloth]`, and get this back:
 `[Linen Cloth]: 25s 30c (TSM market)`
@@ -38,7 +38,7 @@ They type `?pc [Linen Cloth]`, or just `?[Linen Cloth]`, and get this back:
 - **The short `?`:** a `?` right before the link asks, old-school style. `anyone have [Linen Cloth]?` doesn't count.
 - **Stacks:** `?pc 20 [Linen Cloth]` or `?20 [Linen Cloth]` prices 20 and one.
 - **Several items:** up to 6 in one message, each with its own amount. The answer starts with the **total**, then lists each item.
-- **Their choice of price:** `?pc tsm [item]` or `?pc auc [item]` picks the price addon.
+- **Source & net price:** `?pc tsm [item]`, `?pc auc [item]` or `?pc craft [item]` picks the addon; `?pc net [item]` deducts the 5% AH cut.
 - **Battle pets** work too.
 
 ### Honest answers
@@ -56,7 +56,7 @@ Whispers from friends, Battle.net friends and guild mates are answered from the 
 - On Retail it stays quiet in dungeons, raids and battlegrounds, where the game hides chat from addons.
 
 ### Good to know
-- Needs **TradeSkillMaster** or **Auctionator** with prices for your realm.
+- Needs **TradeSkillMaster**, **Auctionator** or **Craftonomics** with prices for your realm.
 - Works on Retail, Mists of Pandaria Classic, TBC Anniversary, WoW Forever and Classic Era.
 - **/pricereply** opens the options. **/pricereply selftest** lets you try it alone.
 
@@ -70,11 +70,11 @@ This addon was made with AI.
 
 ## B. Upload File form
 
-**File:** `dist\PriceCheckReply-1.3.0.zip`
+**File:** `dist\PriceCheckReply-1.4.0.zip`
 
 **Display name**
 ```
-PriceCheck Reply 1.3.0
+PriceCheck Reply 1.4.0
 ```
 
 **Release type:** `Release`
@@ -83,6 +83,11 @@ PriceCheck Reply 1.3.0
 
 **Changelog** (paste only the newest part; paste older parts too if they never went up)
 ```markdown
+1.4.0
+- **Craftonomics prices:** PriceCheck Reply can now answer with prices from **Craftonomics** (as a fallback in Automatic mode, as **Craftonomics only**, or when someone asks with `?pc craft [item]`).
+- **Net after AH cut:** asking with `?pc net [item]` deducts the 5% auction house cut and notes `(after 5% cut)` on single items and multi-item totals.
+- Fixed: a bare `?pc` with no item link is ignored, your own messages are recognized reliably on WoW Forever, Auctionator price ages still show when looked up by item ID, and multi-line replies stop cleanly if chat becomes restricted mid-reply.
+
 1.3.0
 - New option, Also say: a second TSM price next to the main one, like `(TSM market, lowest 22s)`, so the asker can tell whether today's price is above or below its usual value. For a stack it's the price of one; several items get both totals. Off by default.
 - Price names in answers are shorter: `TSM market`, `TSM lowest` and `TSM region avg`.

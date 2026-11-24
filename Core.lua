@@ -139,7 +139,7 @@ local function help()
 	ns.Print("commands:")
 	print("  /pricereply - options")
 	print("  /pricereply on | off - answer price requests or not")
-	print("  /pricereply test <item link> - show the answer you'd send, only to you (add tsm or auc to pick the price addon)")
+	print("  /pricereply test <item link> - show the answer you'd send, only to you (add tsm, auc or craft to pick the price addon, or net for after the 5% AH cut)")
 	print("  /pricereply selftest - for 5 minutes, your own ?pc messages in chat get answered, so you can try it alone")
 end
 

@@ -79,7 +79,7 @@ function ns.CreateOptions()
 	end
 
 	checkbox("enabled", "Answer price requests",
-		"Answer messages with ?pc and one or more item links, like \"?pc [Linen Cloth]\", or with ? right before a link, like \"?[Linen Cloth]\". A number before an item asks about that many: \"?pc 20 [Linen Cloth]\". Several items get a total at the end. "
+		"Answer messages with ?pc and one or more item links, like \"?pc [Linen Cloth]\", or with ? right before a link, like \"?[Linen Cloth]\". Add \"net\" (like \"?pc net [Linen Cloth]\") for the price after the 5% auction house cut. A number before an item asks about that many: \"?pc 20 [Linen Cloth]\". Several items get a total first. "
 			.. "Same as /pricereply on and /pricereply off.")
 
 	header("Whispers")
@@ -111,13 +111,14 @@ function ns.CreateOptions()
 
 	header("Prices")
 	dropdown("provider", "Price addon", {
-		{ "auto", "Automatic (TSM, then Auctionator)" },
+		{ "auto", "Automatic (TSM, Auctionator, then Craftonomics)" },
 		{ "tsm", "TradeSkillMaster only" },
 		{ "auctionator", "Auctionator only" },
-	}, "Where prices come from. Automatic uses TSM and falls back to Auctionator for items TSM has no price for.")
+		{ "craftonomics", "Craftonomics only" },
+	}, "Where prices come from. Automatic uses TSM, falls back to Auctionator, and then Craftonomics.")
 	checkbox("askerPicks", "Askers can pick the price addon",
-		"Someone who adds \"tsm\" or \"auc\" to a request, like \"?pc auc [Linen Cloth]\", gets that addon's price instead. "
-			.. "If you don't have the addon they asked for, the answer comes from the other one and says so.")
+		"Someone who adds \"tsm\", \"auc\" or \"craft\" to a request, like \"?pc auc [Linen Cloth]\", gets that addon's price instead. "
+			.. "If you don't have the addon they asked for, the answer comes from another loaded one and says so.")
 	local tsmChoices = {}
 	for _, source in ipairs(ns.TSM_SOURCES) do tsmChoices[#tsmChoices + 1] = { source[1], source[2] } end
 	dropdown("tsmSource", "TSM price", tsmChoices,

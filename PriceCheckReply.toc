@@ -2,8 +2,8 @@
 ## Title: PriceCheck Reply
 ## Notes: Answers friends and guild mates who ask "?pc" or "?" with an item link, with its price from TSM or Auctionator. Type /pricereply.
 ## Author: Archdude
-## Version: 1.3.0
-## OptionalDeps: TradeSkillMaster, Auctionator
+## Version: 1.4.0
+## OptionalDeps: TradeSkillMaster, Auctionator, Craftonomics
 ## SavedVariables: PriceCheckReplyDB, PriceCheckReplyWhatsNew
 ## IconTexture: Interface\Icons\INV_Misc_Coin_02
 ## Category-enUS: Chat

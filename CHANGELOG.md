@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.0
+- **Craftonomics prices:** PriceCheck Reply can now answer with prices from **Craftonomics** (as a fallback in Automatic mode, as **Craftonomics only**, or when someone asks with `?pc craft [item]`).
+- **Net after AH cut:** asking with `?pc net [item]` deducts the 5% auction house cut and notes `(after 5% cut)` on single items and multi-item totals.
+- Fixed: a bare `?pc` with no item link is ignored, your own messages are recognized reliably on WoW Forever, Auctionator price ages still show when looked up by item ID, and multi-line replies stop cleanly if chat becomes restricted mid-reply.
+
 ## 1.3.0
 - New option, Also say: a second TSM price next to the main one, like `(TSM market, lowest 22s)`, so the asker can tell whether today's price is above or below its usual value. For a stack it's the price of one; several items get both totals. Off by default.
 - Price names in answers are shorter: `TSM market`, `TSM lowest` and `TSM region avg`.
