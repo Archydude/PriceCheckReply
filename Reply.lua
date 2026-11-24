@@ -60,7 +60,9 @@ end
 
 local function isMe(sender, guid)
 	if guid and guid == UnitGUID("player") then return true end
-	return shortName(sender) == UnitName("player")
+	local first, last = UnitName("player")
+	local me = (last and last ~= "") and (first .. " " .. last) or first
+	return shortName(sender) == me
 end
 
 local function isFriend(sender, guid)
@@ -154,10 +156,12 @@ local function send(lines, chatType, target)
 	lastSent[place .. answer] = now
 
 	local function sendLine(line)
+		-- Re-check lockdown on delayed lines (lines 2-3 fire 0.3s/0.6s later) and guard errors.
+		if C_ChatInfo and ask(C_ChatInfo.InChatMessagingLockdown) then return end
 		if chatType == "BN_WHISPER" then
-			SendBNetWhisper(target, line)
+			pcall(SendBNetWhisper, target, line)
 		else
-			SendChat(line, chatType, nil, target)
+			pcall(SendChat, line, chatType, nil, target)
 		end
 	end
 	for i, line in ipairs(lines) do
@@ -225,6 +229,7 @@ local function onChat(event, ...)
 	end
 
 	if not hasTrigger(text) then return end
+	if #ns.ReadItems(text) == 0 then return end
 	if testing then
 		ns.Print("self-test: a request in " .. PLACE_NAMES[channel.reply] .. ", answering by "
 			.. (replyType == "WHISPER" and "whispering you" or PLACE_NAMES[replyType]) .. ".")

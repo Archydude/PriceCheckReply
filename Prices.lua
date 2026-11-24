@@ -102,12 +102,13 @@ local function auctionatorPrice(link, kind)
 		value = positive(pcall(api.GetAuctionPriceByItemLink, ADDON_NAME, link))
 	end
 	-- Some links Auctionator doesn't know by link it still knows by item.
+	local id
 	if not value and kind == "item" and api.GetAuctionPriceByItemID then
-		local id = tonumber(link:match("|Hitem:(%d+)"))
+		id = tonumber(link:match("|Hitem:(%d+)"))
 		if id then value = positive(pcall(api.GetAuctionPriceByItemID, ADDON_NAME, id)) end
 	end
 	if not value then return end
-	return value, "Auctionator", ns.AuctionatorAge(link)
+	return value, "Auctionator", ns.AuctionatorAge(link, id)
 end
 
 -- One item's auction price, where it came from, how old it is (Auctionator only), and whether it
@@ -143,10 +144,16 @@ end
 -- "updated 2h ago", "updated yesterday", "updated 5 days ago" for an item's Auctionator price, or
 -- nil when Auctionator can't say. Auctionator only knows which day it last saw an item; for an item
 -- seen today, the time of its last full scan narrows it down, when that scan was today too.
-function ns.AuctionatorAge(link)
+function ns.AuctionatorAge(link, itemID)
 	local api = auctionatorAPI()
-	if not (api and api.GetAuctionAgeByItemLink) then return end
-	local ok, days = pcall(api.GetAuctionAgeByItemLink, ADDON_NAME, link)
+	if not api then return end
+	local ok, days
+	if api.GetAuctionAgeByItemLink then
+		ok, days = pcall(api.GetAuctionAgeByItemLink, ADDON_NAME, link)
+	end
+	if (not ok or type(days) ~= "number") and itemID and api.GetAuctionAgeByItemID then
+		ok, days = pcall(api.GetAuctionAgeByItemID, ADDON_NAME, itemID)
+	end
 	if not ok or type(days) ~= "number" then return end
 	if days >= 2 then return format("updated %.0f days ago", days) end
 	if days >= 1 then return "updated yesterday" end
