@@ -209,12 +209,13 @@ end
 ---------------------------------------------------------------------------
 
 -- Bind types that keep an item off the auction house, and how the answer says it.
+local ItemBind = Enum and Enum.ItemBind or {}
 local CANT_AUCTION = {
-	[1] = "binds when picked up",
-	[4] = "quest item",
-	[7] = "binds to account",
-	[8] = "warbound",
-	[9] = "warbound until equipped",
+	[ItemBind.OnAcquire or 1] = "binds when picked up",
+	[ItemBind.Quest or 4] = "quest item",
+	[ItemBind.ToWoWAccount or 7] = "binds to account",
+	[ItemBind.ToBnetAccount or 8] = "warbound",
+	[ItemBind.ToBnetAccountUntilEquipped or 9] = "warbound until equipped",
 }
 
 local LOAD_WAIT, LOAD_CHECK = 2, 0.2 -- seconds to wait for item details, and how often to look
@@ -289,19 +290,36 @@ end
 -- The request
 ---------------------------------------------------------------------------
 
+local IGNORE_BEFORE_COUNT = {
+	tier = true, t = true, rank = true, r = true, ilvl = true, ilevel = true,
+	lvl = true, level = true, quality = true, q = true, star = true, stars = true,
+	phase = true, p = true, season = true, s = true, key = true, mythic = true, m = true, patch = true,
+}
+
 -- The links in a message, each with how many were asked about: "20 [Linen Cloth]",
 -- "20x [Linen Cloth]", "x20 [Linen Cloth]", "20 ?[Linen Cloth]" and "[Linen Cloth] x20" all ask
 -- about 20, and so does "[Linen Cloth] 20" when the number ends the message (in the middle it
--- could belong to the next link). At most MAX_ITEMS.
+-- could belong to the next link). Ignores qualifiers like "tier 2 [Helm]" or "+10 [Key]". At most MAX_ITEMS.
 function ns.ReadItems(text)
 	local items = {}
 	local searchFrom, lastEnd = 1, 0
 	while #items < MAX_ITEMS do
 		local first, last, kind = text:find(ns.LINK_PATTERN, searchFrom)
 		if not first then break end
-		local count = text:sub(lastEnd + 1, first - 1):match("(%d+)%s*[xX]?%s*%??%s*$")
+		local before = text:sub(lastEnd + 1, first - 1)
+		local prefix, preX, digits, postX = before:match("^(.-)([xX]?)(%d+)%s*([xX]?)%s*%??%s*$")
+		local count
+		if digits then
+			local attached = prefix:match("[%w+]$") ~= nil
+			local explicitX = preX ~= "" or postX ~= ""
+			local prevWord = not attached and not explicitX and prefix:match("(%a+)%s*$")
+			if not attached and not (prevWord and IGNORE_BEFORE_COUNT[prevWord:lower()]) then
+				count = digits
+			end
+		end
 		local link = text:sub(first, last)
 		local afterCount, afterEnd = text:match("^%s*[xX]%s*(%d+)()", last + 1)
+		if afterCount and text:sub(afterEnd, afterEnd):find("%w") then afterCount = nil end
 		if not afterCount then afterCount, afterEnd = text:match("^%s*(%d+)%s*()$", last + 1) end
 		if afterCount then
 			count = afterCount

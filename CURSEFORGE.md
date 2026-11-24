@@ -21,7 +21,7 @@ Friends and guild mates type ?pc or ? with an item link and get your TSM, Auctio
 
 **License:** `MIT License`
 
-**Logo / avatar:** `PriceCheckReply\images\logo-v1.png`
+**Logo / avatar:** `PriceCheckReply\images\logo-v2.png`
 
 **Description** (paste everything between the lines)
 
@@ -70,11 +70,11 @@ This addon was made with AI.
 
 ## B. Upload File form
 
-**File:** `dist\PriceCheckReply-1.4.0.zip`
+**File:** `dist\PriceCheckReply-1.4.1.zip`
 
 **Display name**
 ```
-PriceCheck Reply 1.4.0
+PriceCheck Reply 1.4.1
 ```
 
 **Release type:** `Release`
@@ -83,6 +83,10 @@ PriceCheck Reply 1.4.0
 
 **Changelog** (paste only the newest part; paste older parts too if they never went up)
 ```markdown
+1.4.1
+- Fixed: numbers in chat like `tier 2 [Item]`, `r3 [Item]` or `+10 [Item]` are no longer mistaken for an item quantity.
+- Fixed: account-bound, Warbound, and Warbound until equipped items are accurately reported as non-auctionable.
+
 1.4.0
 - **Craftonomics prices:** PriceCheck Reply can now answer with prices from **Craftonomics** (as a fallback in Automatic mode, as **Craftonomics only**, or when someone asks with `?pc craft [item]`).
 - **Net after AH cut:** asking with `?pc net [item]` deducts the 5% auction house cut and notes `(after 5% cut)` on single items and multi-item totals.

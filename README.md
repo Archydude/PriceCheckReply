@@ -1,6 +1,6 @@
 # PriceCheck Reply
 
-Answers price questions for you. When a friend or guild mate whispers you `?pc` or `?` with an item link, PriceCheck Reply whispers back what the item goes for, using your TSM or Auctionator prices. You don't have to stop what you're doing to look it up.
+Answers price questions for you. When a friend or guild mate whispers you `?pc` or `?` with an item link, PriceCheck Reply whispers back what the item goes for, using your TSM, Auctionator or Craftonomics prices. You don't have to stop what you're doing to look it up.
 
 ```
 Friend whispers: ?pc [Linen Cloth]
@@ -11,7 +11,7 @@ Works on Retail, MoP Classic, TBC Anniversary, WoW Forever and Classic Era.
 
 ## Requirements
 
-**TradeSkillMaster** or **Auctionator**, with prices for your realm. Without one of them it doesn't answer, and it tells you once when someone asks.
+**TradeSkillMaster**, **Auctionator** or **Craftonomics**, with prices for your realm. Without one of them it doesn't answer, and it tells you once when someone asks.
 
 ## Asking
 
@@ -26,7 +26,8 @@ Works on Retail, MoP Classic, TBC Anniversary, WoW Forever and Classic Era.
 
   Each item can have its own number, like `?20 [Linen Cloth] 5 [Wool Cloth]`, and the total counts them. Where the prices come from is said once on the total line, unless the items' prices come from different addons. Items with no price are left out of the total, which then says so: `Total: 25s 30c for 1 of 2 items`. If the list doesn't fit in three chat lines, the rest is counted: `and 2 more`.
 - **Battle pets:** pet links work too.
-- **A price addon of their choice:** `?pc tsm [Linen Cloth]` or `?pc auc [Linen Cloth]` (or `auctionator`) answers with that addon's price, and the answer always says which addon it's from. If you don't have the addon they asked for, the answer comes from the one you have and says so: `(Auctionator, no TSM here)`. You can turn this off.
+- **A price addon of their choice:** `?pc tsm [Linen Cloth]`, `?pc auc [Linen Cloth]` (or `auctionator`), or `?pc craft [Linen Cloth]` (or `craftonomics`) answers with that addon's price, and the answer always says which addon it's from. If you don't have the addon they asked for, the answer comes from the one you have and says so: `(Auctionator, no TSM here)`. You can turn this off.
+- **Net after AH cut:** add `net` (like `?pc net [Linen Cloth]`) to deduct the 5% auction house cut and mark the answer `(after 5% cut)`.
 
 `?pc` can be anywhere in the message, in upper or lower case, but it has to stand on its own (`?pcs` doesn't count), and item names don't count. A plain `?` works when it's right before the item link, with only a number in between if any: `?[Linen Cloth]` and `?20 [Linen Cloth]` ask, but `anyone have [Linen Cloth]?` and `what drops this? [Linen Cloth]` don't. Both ways always work and can't be changed, so everyone asks the same way.
 
@@ -54,7 +55,7 @@ Requests in guild and officer chat are answered by whispering the asker, because
 
 For requests in party, raid and instance chat, you choose with **Party and raid chat**: **Don't answer** (the default), **Answer in the same chat** so everyone there sees the price, or **Whisper the asker** to keep it between the two of you.
 
-**When several of you have PriceCheck Reply**, a request in party or raid chat still gets just one answer. It comes about a second later, instead of one from everyone. Who answers changes from request to request. Someone who has that chat set to Don't answer is left out, so one of the others answers. In guild and officer chat the players with the addon can't tell each other who answers, so the asker gets a whisper from each of them. Whispers are answered right away, since only you got them.
+**When several of you have PriceCheck Reply**, a request in party or raid chat still gets just one answer. It comes about a second later, instead of one from everyone. Who answers changes from request to request. Someone who has that chat set to Don't answer is left out, so one of the others answers. On Retail and WoW Forever, addons can't tell each other who answers in guild and officer chat, so each of you whispers the asker; on Classic realms where guild addon chat is allowed, it picks one answerer there too. Whispers are answered right away, since only you got them.
 
 On Retail, inside dungeons, raids, Mythic+ and battlegrounds the game doesn't let addons read chat or send it during fights, so nothing gets answered there.
 
@@ -62,7 +63,7 @@ To keep chat tidy, the same answer isn't sent to the same place twice within a f
 
 ## Prices
 
-- **Price addon:** Automatic (TSM, and Auctionator for items TSM has no price for), TSM only, or Auctionator only. Askers who add `tsm` or `auc` to their request get that addon instead.
+- **Price addon:** Automatic (TSM, then Auctionator, then Craftonomics for items the others have no price for), TSM only, Auctionator only, or Craftonomics only. Askers who add `tsm`, `auc` or `craft` to their request get that addon instead.
 - **Askers can pick the price addon:** on by default.
 - **TSM price:** market value (default), lowest auction right now, historical price, or region market average.
 - **Also say:** a second TSM price added to each answer, so the asker can tell whether today's price is above or below the usual one. None by default; pick any of the four above. With market value as the main price and lowest auction here: `[Linen Cloth]: 25s 30c (TSM market, lowest 22s)`. For a stack it's the price of one, beside the price of one by the main price: `20x [Linen Cloth]: 5g 6s (25s 30c each, TSM market, lowest 22s each)`. In an answer about several items, the total line has both totals, `Total: 3g 47s for 3 items (TSM market, lowest 3g 10s)`, and each item gets a short one, `100x [Copper Bar] 97s (low 85s)`. Only answers with a TSM price get it, and items TSM has no second price for go without.
@@ -78,8 +79,9 @@ To keep chat tidy, the same answer isn't sent to the same place twice within a f
 
 - `/pricereply` opens the options (also Esc > Options > AddOns > PriceCheck Reply). `/pcreply` works too.
 - `/pricereply on` and `/pricereply off` turn answering on and off.
-- `/pricereply test [item link]` shows the answer you'd send, only to you. Shift-click an item to put its link in. Add `tsm` or `auc` to see what an asker picking that addon would get.
+- `/pricereply test [item link]` shows the answer you'd send, only to you. Shift-click an item to put its link in. Add `tsm`, `auc` or `craft` to pick the price addon, or `net` for after the 5% AH cut.
 - `/pricereply selftest` lets you try it alone: for 5 minutes, your own `?pc` and `?` requests get answered the way someone else's would. Ask in guild chat and you get the whisper a guild mate would get, and chat tells you where each answer went. If a chat is turned off in the options, it says that instead. `/pricereply selftest off` ends it early.
+- `/whatsnew` opens the What's New window with the latest changes.
 
 ## Made with AI
 This addon was made with AI.

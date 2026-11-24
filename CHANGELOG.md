@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.1
+- Fixed: numbers in chat like `tier 2 [Item]`, `r3 [Item]` or `+10 [Item]` are no longer mistaken for an item quantity.
+- Fixed: account-bound, Warbound, and Warbound until equipped items are accurately reported as non-auctionable.
+
 ## 1.4.0
 - **Craftonomics prices:** PriceCheck Reply can now answer with prices from **Craftonomics** (as a fallback in Automatic mode, as **Craftonomics only**, or when someone asks with `?pc craft [item]`).
 - **Net after AH cut:** asking with `?pc net [item]` deducts the 5% auction house cut and notes `(after 5% cut)` on single items and multi-item totals.
