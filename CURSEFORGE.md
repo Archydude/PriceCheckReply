@@ -62,7 +62,7 @@ Whispers from friends, Battle.net friends and guild mates are answered from the 
 
 This addon was made with AI.
 
-**Feedback and bug reports are welcome** in the comments.
+**Feedback, suggestions, and bug reports are welcome** in the comments or by sending me a message on Discord.
 ```
 ---
 
@@ -70,11 +70,11 @@ This addon was made with AI.
 
 ## B. Upload File form
 
-**File:** `dist\PriceCheckReply-1.4.1.zip`
+**File:** `dist\PriceCheckReply-1.4.2.zip`
 
 **Display name**
 ```
-PriceCheck Reply 1.4.1
+PriceCheck Reply 1.4.2
 ```
 
 **Release type:** `Release`
@@ -83,6 +83,9 @@ PriceCheck Reply 1.4.1
 
 **Changelog** (paste only the newest part; paste older parts too if they never went up)
 ```markdown
+1.4.2
+- Fixed: stays quietly out of the way in Retail dungeons, raids and battlegrounds when the game hides chat from addons, without errors or unnecessary background work.
+
 1.4.1
 - Fixed: numbers in chat like `tier 2 [Item]`, `r3 [Item]` or `+10 [Item]` are no longer mistaken for an item quantity.
 - Fixed: account-bound, Warbound, and Warbound until equipped items are accurately reported as non-auctionable.

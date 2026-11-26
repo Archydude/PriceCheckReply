@@ -54,6 +54,10 @@ local function ask(fn, ...)
 	return ok and result
 end
 
+local function inChatLockdown()
+	return C_ChatInfo ~= nil and ask(C_ChatInfo.InChatMessagingLockdown) and true or false
+end
+
 local function shortName(name)
 	return Ambiguate and Ambiguate(name, "none") or name
 end
@@ -137,7 +141,7 @@ end
 
 local function send(lines, chatType, target)
 	-- Retail stops addons sending chat during boss fights, Mythic+ and PvP matches.
-	if C_ChatInfo and ask(C_ChatInfo.InChatMessagingLockdown) then return end
+	if inChatLockdown() then return end
 
 	local place = chatType .. ":" .. tostring(target or "")
 	local answer = table.concat(lines, "\n")
@@ -157,7 +161,7 @@ local function send(lines, chatType, target)
 
 	local function sendLine(line)
 		-- Re-check lockdown on delayed lines (lines 2-3 fire 0.3s/0.6s later) and guard errors.
-		if C_ChatInfo and ask(C_ChatInfo.InChatMessagingLockdown) then return end
+		if inChatLockdown() then return end
 		if chatType == "BN_WHISPER" then
 			pcall(SendBNetWhisper, target, line)
 		else
@@ -198,13 +202,14 @@ end
 local function onChat(event, ...)
 	local db = ns.db
 	if not db.enabled then return end
+	if inChatLockdown() then return end
 	local channel = CHANNELS[event]
 	local how = channel.setting and db[channel.setting]
 
 	local text, sender = ...
 	local flags, guid, bnSenderID = select(6, ...), select(12, ...), select(13, ...)
 	-- Inside instances the game hides chat from addons; there's nothing to read there.
-	if not (ns.Readable(text) and ns.Readable(sender) and ns.Readable(guid)) then return end
+	if not (ns.Readable(text) and ns.Readable(sender) and ns.Readable(guid) and ns.Readable(flags)) then return end
 	if type(text) ~= "string" or type(sender) ~= "string" then return end
 	if flags == "GM" or flags == "DEV" then return end
 	local fromMe = event ~= "CHAT_MSG_BN_WHISPER" and isMe(sender, guid)

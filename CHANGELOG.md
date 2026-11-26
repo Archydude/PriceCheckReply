@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.4.2
+- Fixed: stays quietly out of the way in Retail dungeons, raids and battlegrounds when the game hides chat from addons, without errors or unnecessary background work.
+
 ## 1.4.1
 - Fixed: numbers in chat like `tier 2 [Item]`, `r3 [Item]` or `+10 [Item]` are no longer mistaken for an item quantity.
 - Fixed: account-bound, Warbound, and Warbound until equipped items are accurately reported as non-auctionable.

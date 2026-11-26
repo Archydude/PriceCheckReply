@@ -2,10 +2,13 @@
 ArchdudeWhatsNew:Register("PriceCheckReply", {
 	title = "PriceCheck Reply",
 	icon = "Interface\\Icons\\INV_Misc_Coin_02",
-	version = "1.4.1",
+	version = "1.4.2",
 	seen = "PriceCheckReplyWhatsNew",
 	saved = { "PriceCheckReplyDB" },
 	changes = {
+		{ "1.4.2",
+			"Fixed: stays quietly out of the way in Retail dungeons, raids and battlegrounds when the game hides chat from addons, without errors or unnecessary background work.",
+		},
 		{ "1.4.1",
 			"Fixed: numbers in chat like |cffffd100tier 2 [Item]|r, |cffffd100r3 [Item]|r or |cffffd100+10 [Item]|r are no longer mistaken for an item quantity.",
 			"Fixed: account-bound, Warbound, and Warbound until equipped items are accurately reported as non-auctionable.",
@@ -41,10 +44,6 @@ ArchdudeWhatsNew:Register("PriceCheckReply", {
 		},
 		{ "1.1.1",
 			"Works on every version of WoW again: Retail, Mists of Pandaria Classic, TBC Anniversary, WoW Forever and Classic Era.",
-		},
-		{ "1.1.0",
-			"The old-school way of asking works too: |cffffd100?[Linen Cloth]|r, a question mark right before the item link. Everyone with the addon answers it, and a question mark in normal chat, like |cffffd100anyone have [Linen Cloth]?|r, doesn't count.",
-			"More ways to ask about a stack: |cffffd100?x20 [Linen Cloth]|r, |cffffd10020 ?[Linen Cloth]|r, and a plain number at the end of the message, like |cffffd100?pc [Linen Cloth] 20|r.",
 		},
 	},
 })

@@ -53,9 +53,17 @@ local function forgetOld(now)
 	end
 end
 
+local function inChatLockdown()
+	local check = C_ChatInfo and C_ChatInfo.InChatMessagingLockdown
+	if not check then return false end
+	local ok, locked = pcall(check)
+	return ok and locked
+end
+
 -- Runs answer() if this player is the one to answer a request seen in `chatType` chat with this
 -- text. Whispers (and anything else without a shared channel) answer right away.
 function ns.TakeTurns(chatType, text, answer)
+	if inChatLockdown() then return end
 	local channel = ADDON_CHANNEL[chatType]
 	if not channel then return answer() end
 	-- Where the realm doesn't let addons write in this chat (guild and officer chat), it doesn't
@@ -79,6 +87,7 @@ function ns.TakeTurns(chatType, text, answer)
 	if not sent then return answer() end
 
 	C_Timer.After(WINDOW, function()
+		if inChatLockdown() then return end
 		local players = {}
 		for player, at in pairs(offers[key] or {}) do
 			if math.abs(at - now) <= SAME_ASK then players[player] = true end
@@ -100,7 +109,7 @@ local frame = CreateFrame("Frame")
 frame:RegisterEvent("CHAT_MSG_ADDON")
 -- An offer is "<request key> <player GUID>", like "GUILD:1234567 Player-1234-0ABCDEF0".
 frame:SetScript("OnEvent", function(_, _, prefix, message)
-	if prefix ~= PREFIX then return end
+	if not ns.Readable(prefix) or prefix ~= PREFIX then return end
 	if not ns.Readable(message) or type(message) ~= "string" then return end
 	local key, player = message:match("^(%u[%u_]*:%d+) (Player%-[%w%-]+)$")
 	if not key then return end
